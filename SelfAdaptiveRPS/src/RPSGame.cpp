@@ -25,6 +25,7 @@ void RPSGame::play(int noOfGame) {
 	player1->addRule(new Rule("0?1", 'R'));
 	player1->addRule(new Rule("1?2", 'P'));
 	player1->addRule(new Rule("2?3", 'S'));
+	player1->addRule(new Rule("123?3", 'R'));
 	players.push_back(player1);
 
 	Player* player2 = new Player("P2");

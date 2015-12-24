@@ -23,6 +23,7 @@ public:
 	void addRule(Rule* rule);
 	void printHistory();
 	std::string getName();
+	std::list<Rule*> getRules();
 	int getWin();
 	int getLoose();
 	int getDraw();

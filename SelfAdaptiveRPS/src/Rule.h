@@ -16,6 +16,7 @@ public:
 	char outcome;
 	Rule(std::string expr, char outcome);
 	virtual ~Rule();
+	const char *getString();
 protected:
 };
 

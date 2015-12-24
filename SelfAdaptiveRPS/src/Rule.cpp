@@ -5,6 +5,7 @@
  *      Author: mohiul
  */
 
+#include <sstream>
 #include "Rule.h"
 
 Rule::Rule(std::string expr, char outcome) {
@@ -17,3 +18,8 @@ Rule::~Rule() {
 	// TODO Auto-generated destructor stub
 }
 
+const char *Rule::getString() {
+	std::ostringstream oss;
+	oss << expr << ":" << outcome;
+	return oss.str().c_str();
+}

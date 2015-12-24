@@ -119,6 +119,10 @@ void Player::printHistory(){
 	std::cout << std::endl;
 }
 
+std::list<Rule*> Player::getRules(){
+	return rules;
+}
+
 std::string Player::getName(){
 	return name;
 }

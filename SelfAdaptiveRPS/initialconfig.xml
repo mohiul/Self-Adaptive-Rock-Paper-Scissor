@@ -1,0 +1,19 @@
+﻿<!--
+This file contains initial configuration information of the rules
+
+<root></root>:
+This is the standard root tag of the XML file.
+-->
+
+<root>
+  <player name="P1">
+	<rule>0?1:R</rule>
+	<rule>1?2:P</rule>
+	<rule>2?3:S</rule>
+	<rule>123?3:R</rule>
+  	<adaptation>
+		<condition>0?1:?</condition><action>ADD</action>
+  	</adaptation>
+  </player>
+  <player name="P2"/>
+</root>

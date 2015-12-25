@@ -12,15 +12,22 @@
 #include <list>
 
 #include "Player.h"
+#include "tinyxml.h"
 
 class RPSGame {
 public:
-	RPSGame();
+	RPSGame(std::string configFile);
 	virtual ~RPSGame();
 	void play(int noOfGame);
+	std::string printRules(Player *player);
 	void printResult();
 protected:
-	std::list<Player*> players;
+	Player *player1;
+	Player *player2;
+
+private:
+	bool readConfigFile(std::string configFile);
+	void getRulesFromXML(TiXmlElement* playerElm, Player *player);
 };
 
 #endif /* RPSGAME_H_ */

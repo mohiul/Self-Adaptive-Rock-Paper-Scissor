@@ -54,7 +54,7 @@ void control(int key)
     switch (key)
     {
     case START:
-    	rpsGame = new RPSGame();
+    	rpsGame = new RPSGame(std::string(initFile->get_text()));
     	rpsGame->play(iterations);
     	rpsGame->printResult();
     	ctlStop->enable();
@@ -100,7 +100,7 @@ int main(int argc, char** argv)
     initFile = glui->add_edittext_to_panel(controlPanel, "Rule Init File ", GLUI_EDITTEXT_TEXT);
     initFile->set_w(150);
     initFile->enable();
-    initFile->set_text("initialconfig.xml");
+    initFile->set_text("/home/mohiul/workspace-cpp/self-adaptive-rps-code/SelfAdaptiveRPS/initialconfig.xml");
     GLUI_Spinner *iteration = new GLUI_Spinner( controlPanel, "Iterations:", &iterations);
     iteration->set_int_limits( 10, 10000 );
     glui->add_column(false);

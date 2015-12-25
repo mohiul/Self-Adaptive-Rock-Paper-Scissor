@@ -12,9 +12,12 @@
 #include <list>
 
 #include "Player.h"
-#include "tinyxml.h"
+#include "XMLConfigReader.h"
+
+class XMLConfigReader;
 
 class RPSGame {
+	friend class XMLConfigReader;
 public:
 	RPSGame(std::string configFile);
 	virtual ~RPSGame();
@@ -27,9 +30,7 @@ protected:
 	Player *player2;
 
 private:
-	bool readConfigFile(std::string configFile);
-	void getRulesFromXML(TiXmlElement* playerElm, Player *player);
-	void getAdaptersFromXML(TiXmlElement* playerElm, Player *player);
+	XMLConfigReader *xmlConfigReader;
 };
 
 #endif /* RPSGAME_H_ */

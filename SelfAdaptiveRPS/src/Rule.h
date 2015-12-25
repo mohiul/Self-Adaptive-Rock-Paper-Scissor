@@ -9,13 +9,17 @@
 #define RULE_H_
 
 #include <iostream>
+#include <string>
 
 class Rule {
+protected:
+	std::string condition;
+	char action;
 public:
-	std::string expr;
-	char outcome;
-	Rule(std::string expr, char outcome);
+	Rule(std::string condition, char action);
 	virtual ~Rule();
+	std::string getCondition();
+	char getAction();
 	const char *getString();
 protected:
 };

@@ -11,9 +11,11 @@ This is the standard root tag of the XML file.
 	<rule>1?2:P</rule>
 	<rule>2?3:S</rule>
 	<rule>123?3:R</rule>
-  	<adaptation>
-		<condition>0?1:?</condition><action>ADD</action>
-  	</adaptation>
+  	<adapter>
+  		<condition>0?1:?</condition>
+  		<action>ADD</action>
+  		<action>MOD</action>	
+  	</adapter>
   </player>
   <player name="P2"/>
 </root>

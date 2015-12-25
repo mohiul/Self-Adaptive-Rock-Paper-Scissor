@@ -27,7 +27,7 @@ char Player::nextMove() {
 		bool match = false;
 		for (iterator = rules.begin(); iterator != rules.end(); ++iterator) {
 		    Rule* rule = *iterator;
-		    const char *expr = rule->expr.c_str();
+		    const char *expr = rule->getCondition().c_str();
 		    match = false;
 		    int i; std::list<char>::const_iterator historyItr;
 		    for(i = sizeof(expr) - 2, historyItr = history.begin();
@@ -42,7 +42,7 @@ char Player::nextMove() {
 		    }
 		    if(i == -1) match = true;
 		    if(match){
-		    	moveToReturn = rule->outcome;
+		    	moveToReturn = rule->getAction();
 		    	break;
 		    }
 		}
@@ -110,6 +110,10 @@ void Player::addRule(Rule* rule) {
 	rules.push_back(rule);
 }
 
+void Player::addAdapter(Adapter* adapter) {
+	adapters.push_back(adapter);
+}
+
 void Player::printHistory(){
 	std::list<char>::const_iterator iterator;
 	std::cout << name << " history: ";
@@ -121,6 +125,10 @@ void Player::printHistory(){
 
 std::list<Rule*> Player::getRules(){
 	return rules;
+}
+
+std::list<Adapter*> Player::getAdapters(){
+	return adapters;
 }
 
 std::string Player::getName(){

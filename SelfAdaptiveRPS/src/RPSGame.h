@@ -20,6 +20,7 @@ public:
 	virtual ~RPSGame();
 	void play(int noOfGame);
 	std::string printRules(Player *player);
+	std::string printAdapters(Player *player);
 	void printResult();
 protected:
 	Player *player1;
@@ -28,6 +29,7 @@ protected:
 private:
 	bool readConfigFile(std::string configFile);
 	void getRulesFromXML(TiXmlElement* playerElm, Player *player);
+	void getAdaptersFromXML(TiXmlElement* playerElm, Player *player);
 };
 
 #endif /* RPSGAME_H_ */

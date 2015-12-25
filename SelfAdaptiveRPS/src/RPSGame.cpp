@@ -13,15 +13,44 @@
 
 #include "RPSGame.h"
 #include "SelfAdaptiveRPS.h"
+#include "Adapter.h"
 
 void RPSGame::getRulesFromXML(TiXmlElement* playerElm, Player *player) {
 	for (TiXmlElement* ruleElm = playerElm->FirstChildElement("rule");
 			ruleElm != NULL; ruleElm = ruleElm->NextSiblingElement("rule")) {
 		std::string rule = std::string(ruleElm->GetText());
 		int delimiterLoc = rule.find(":");
-		std::string condition = rule.substr(0, delimiterLoc);
-		std::string action = rule.substr(delimiterLoc + 1, rule.length());
-		player->addRule(new Rule(condition, action.at(0)));
+		player->addRule(new Rule(rule.substr(0, delimiterLoc),
+				rule.substr(delimiterLoc + 1, rule.length()).at(0)));
+	}
+}
+
+void RPSGame::getAdaptersFromXML(TiXmlElement* playerElm, Player *player) {
+	for (TiXmlElement* adapterElm = playerElm->FirstChildElement("adapter");
+			adapterElm != NULL; adapterElm = adapterElm->NextSiblingElement("adapter")) {
+		TiXmlElement* conditionElm = adapterElm->FirstChildElement("condition");
+		if(conditionElm != NULL){
+			std::string rule = std::string(conditionElm->GetText());
+			int delimiterLoc = rule.find(":");
+			Adapter *adapter = new Adapter(new Rule(rule.substr(0, delimiterLoc),
+					rule.substr(delimiterLoc + 1, rule.length()).at(0)));
+			for (TiXmlElement* actionElm = adapterElm->FirstChildElement("action");
+					actionElm != NULL; actionElm = actionElm->NextSiblingElement("action")) {
+				std::string actionTxt = std::string(actionElm->GetText());
+				if(actionTxt == "ADD"){
+					adapter->addAction(ADD);
+				} else if(actionTxt == "DEL"){
+					adapter->addAction(DEL);
+				} else if(actionTxt == "MOD"){
+					adapter->addAction(MOD);
+				} else if(actionTxt == "SHF"){
+					adapter->addAction(SHF);
+				} else {
+					std::cerr << "Action: " << actionTxt << " not defined!!" << std::endl;
+				}
+			}
+			player->addAdapter(adapter);
+		}
 	}
 }
 
@@ -41,19 +70,21 @@ bool RPSGame::readConfigFile(std::string configFile)
 		if(playerElm != NULL){
 			player1 = new Player(playerElm->Attribute("name"));
 			getRulesFromXML(playerElm, player1);
+			getAdaptersFromXML(playerElm, player1);
 
 			playerElm = playerElm->NextSiblingElement("player");
 			if(playerElm != NULL){
 				player2 = new Player(playerElm->Attribute("name"));
 				getRulesFromXML(playerElm, player2);
+				getAdaptersFromXML(playerElm, player2);
 			} else {
-				std::cout << "second player not found!!" << std::endl;
+				std::cerr << "second player not found!!" << std::endl;
 			}
 		} else {
-			std::cout << "<player></player> not found!!" << std::endl;
+			std::cerr << "<player></player> not found!!" << std::endl;
 		}
 	} else {
-		std::cout << "Initial configuration file unformatted!!" << std::endl;
+		std::cerr << "Initial configuration file unformatted!!" << std::endl;
 	}
 	return true;
 }
@@ -90,6 +121,11 @@ void RPSGame::play(int noOfGame) {
 		oss << printRules(player1) << printRules(player2);
 	    rulesTextBox->set_text(oss.str().c_str());
 
+		oss.str("");
+		oss.clear();
+		oss << printAdapters(player1) << printAdapters(player2);
+	    actionTextBox->set_text(oss.str().c_str());
+
 	}
 	player1->printHistory();
 	player2->printHistory();
@@ -105,6 +141,20 @@ std::string RPSGame::printRules(Player *player) {
 		Rule* rule = *iterator;
 		oss << r << ": " << rule->getString() << "\n";
 		r++;
+	}
+	return oss.str();
+}
+
+std::string RPSGame::printAdapters(Player *player) {
+    std::ostringstream oss;
+	std::list<Adapter*> adapters = player->getAdapters();
+	oss << "Player "<< player->getName() << " adapters:\n";
+	std::list<Adapter*>::const_iterator iterator;
+	int a = 1;
+	for (iterator = adapters.begin(); iterator != adapters.end(); ++iterator) {
+		Adapter* adapter = *iterator;
+		oss << a << ": " << adapter->getString() << "\n";
+		a++;
 	}
 	return oss.str();
 }

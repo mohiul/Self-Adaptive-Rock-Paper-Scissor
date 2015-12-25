@@ -8,9 +8,9 @@
 #include <sstream>
 #include "Rule.h"
 
-Rule::Rule(std::string expr, char outcome) {
-	this->expr = expr;
-	this->outcome = outcome;
+Rule::Rule(std::string condition, char action) {
+	this->condition = condition;
+	this->action = action;
 
 }
 
@@ -18,8 +18,16 @@ Rule::~Rule() {
 	// TODO Auto-generated destructor stub
 }
 
+std::string Rule::getCondition(){
+	return condition;
+}
+
+char Rule::getAction(){
+	return action;
+}
+
 const char *Rule::getString() {
 	std::ostringstream oss;
-	oss << expr << ":" << outcome;
+	oss << condition << ":" << action;
 	return oss.str().c_str();
 }

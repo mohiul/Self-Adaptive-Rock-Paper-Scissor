@@ -12,6 +12,7 @@
 #include <list>
 
 #include "Rule.h"
+#include "Adapter.h"
 
 class Player {
 public:
@@ -21,9 +22,11 @@ public:
 	char nextRandomMove();
 	void addHistory(char ownMove, char opponentMove);
 	void addRule(Rule* rule);
+	void addAdapter(Adapter* adapter);
 	void printHistory();
 	std::string getName();
 	std::list<Rule*> getRules();
+	std::list<Adapter*> getAdapters();
 	int getWin();
 	int getLoose();
 	int getDraw();
@@ -34,7 +37,7 @@ protected:
 	int drawCount;
 	std::list<char> history;
 	std::list<Rule*> rules;
-	std::list<char> adapter;
+	std::list<Adapter*> adapters;
 };
 
 #endif /* PLAYER_H_ */

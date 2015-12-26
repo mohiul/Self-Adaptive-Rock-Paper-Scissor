@@ -84,6 +84,7 @@ void control(int key)
 			rpsGame->play(iterations);
 			rpsGame->printResult();
 			ctlStop->enable();
+			iterationSpnr->enable();
     		break;
     	}
     	ctlStart->disable();
@@ -91,9 +92,6 @@ void control(int key)
 
     case STOP_BTN:
     	if(rpsGame != NULL){
-    		if(radioSelection == PLAY){
-    			rpsGame->printResult();
-    		}
     		rpsGame->~RPSGame();
     		rpsGame = NULL;
     	}

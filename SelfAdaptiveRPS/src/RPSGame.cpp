@@ -24,6 +24,7 @@ RPSGame::RPSGame(std::string configFile) {
 	if(radioSelection == PLAY){
 		player2->setName("You");
 	}
+	resultBoxText = resultTextBox->get_text();
 }
 
 RPSGame::~RPSGame() {
@@ -34,16 +35,21 @@ RPSGame::~RPSGame() {
 
 void RPSGame::updateTextBoxes(char p1Move, char p2Move) {
 	std::ostringstream oss;
+
+	oss << gameIteration << ": " << player1->getCurrentHistoryStr(false) << "|" << player2->getCurrentHistoryStr(true) << std::endl;
 	if(gameIteration > 0){
-		oss << historyTextBox->get_text() << "\n";
+		oss << historyTextBox->get_text();
+	} else {
+		oss << player1->getName() << "|" << player2->getName() << std::endl;
 	}
-	oss << gameIteration << ": "
-			<< player1->getName() << ": " << p1Move << " | "
-			<< player2->getName() << ": " << p2Move;
+
 	historyTextBox->set_text(oss.str().c_str());
+
+//	Console print
 	std::cout << "Itr " << gameIteration << ": " << player1->getName() << ": "
 			<< p1Move << " " << player2->getName() << ": " << p2Move
 			<< std::endl;
+
 	oss.str("");
 	oss.clear();
 	oss << printRules(player1);
@@ -88,7 +94,7 @@ void RPSGame::playOneMove(Move move) {
 
 	player1->printHistory();
 	player2->printHistory();
-
+	printResult();
 	gameIteration++;
 }
 
@@ -136,7 +142,6 @@ std::string RPSGame::printAdapters(Player *player) {
 
 void RPSGame::printResult() {
 	std::ostringstream oss;
-	oss << resultTextBox->get_text();
 	oss << "Game No: " << gameNo << std::endl;
 	oss << player1->getName()
 			<< " W: " << player1->getWin()
@@ -148,6 +153,7 @@ void RPSGame::printResult() {
 			<< " L: " << player2->getLoose()
 			<< " D: " << player2->getDraw()
 			<< std::endl;
+	oss << resultBoxText;
 	std::string result = oss.str();
 	resultTextBox->set_text(result.c_str());
 	std::cout << result;

@@ -6,7 +6,7 @@
  */
 
 #include <cstdlib>
-
+#include <sstream>
 #include "Player.h"
 
 Player::Player(std::string name) {
@@ -83,34 +83,44 @@ char Player::nextRandomMove() {
 }
 
 void Player::addHistory(char ownMove, char opponentMove){
+	moveHistory.push_front(ownMove);
 	char gameResult = 0;
 	if(ownMove == 'R' && opponentMove == 'R'){
 		gameResult = '3';
 		drawCount++;
+		resultHistory.push_front('D');
 	} else if(ownMove == 'R' && opponentMove == 'P'){
 		gameResult = '0';
 		looseCount++;
+		resultHistory.push_front('L');
 	} else if(ownMove == 'R' && opponentMove == 'S'){
 		gameResult = '8';
 		winCount++;
+		resultHistory.push_front('W');
 	} else if(ownMove == 'P' && opponentMove == 'R'){
 		gameResult = '6';
 		winCount++;
+		resultHistory.push_front('W');
 	} else if(ownMove == 'P' && opponentMove == 'P'){
 		gameResult = '4';
 		drawCount++;
+		resultHistory.push_front('D');
 	} else if(ownMove == 'P' && opponentMove == 'S'){
 		gameResult = '1';
 		looseCount++;
+		resultHistory.push_front('L');
 	} else if(ownMove == 'S' && opponentMove == 'R'){
 		gameResult = '2';
 		looseCount++;
+		resultHistory.push_front('L');
 	} else if(ownMove == 'S' && opponentMove == 'P'){
 		gameResult = '7';
 		winCount++;
+		resultHistory.push_front('W');
 	} else if(ownMove == 'S' && opponentMove == 'S'){
 		gameResult = '5';
 		drawCount++;
+		resultHistory.push_front('D');
 	}
 	history.push_front(gameResult);
 
@@ -122,6 +132,31 @@ void Player::addRule(Rule* rule) {
 
 void Player::addAdapter(Adapter* adapter) {
 	adapters.push_back(adapter);
+}
+
+std::string Player::getEntireHistoryStr(){
+	std::ostringstream oss;
+	std::list<char>::const_iterator iterator;
+	for (iterator = history.begin(); iterator != history.end(); ++iterator) {
+		oss << " " << *iterator;
+	}
+	oss << std::endl;
+
+	for (iterator = moveHistory.begin(); iterator != moveHistory.end(); ++iterator) {
+		oss << " " << *iterator;
+	}
+	oss << std::endl;
+	return oss.str();
+}
+
+std::string Player::getCurrentHistoryStr(bool flipStr){
+	std::ostringstream oss;
+	if(flipStr){
+		oss << moveHistory.front() << " " << history.front() << " " << resultHistory.front();
+	} else {
+		oss << resultHistory.front() << " " << history.front() << " " << moveHistory.front();
+	}
+	return oss.str();
 }
 
 void Player::printHistory(){

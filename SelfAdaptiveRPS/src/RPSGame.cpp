@@ -22,7 +22,7 @@ RPSGame::RPSGame(std::string configFile) {
 	xmlConfigReader = new XMLConfigReader(this);
 	xmlConfigReader->readConfigFile(configFile);
 	if(radioSelection == PLAY){
-		player2->setName("You");
+		player2->setName("U");
 	}
 	resultBoxText = resultTextBox->get_text();
 }
@@ -36,13 +36,14 @@ RPSGame::~RPSGame() {
 void RPSGame::updateTextBoxes(char p1Move, char p2Move) {
 	std::ostringstream oss;
 
-	oss << gameIteration << ": " << player1->getCurrentHistoryStr(false) << "|" << player2->getCurrentHistoryStr(true) << std::endl;
-	if(gameIteration > 0){
-		oss << historyTextBox->get_text();
-	} else {
-		oss << player1->getName() << "|" << player2->getName() << std::endl;
-	}
-
+	oss << gameIteration << ": " << player1->getCurrentHistoryStr(false)
+			<< " | " << player2->getCurrentHistoryStr(true) << std::endl
+			<< historyBoxText;
+	historyBoxText = oss.str();
+	oss.str("");
+	oss.clear();
+	oss << player1->getName() << " | " << player2->getName() << std::endl;
+	oss << historyBoxText;
 	historyTextBox->set_text(oss.str().c_str());
 
 //	Console print

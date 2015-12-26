@@ -33,6 +33,7 @@ protected:
 	static int gameNo;
 	int gameIteration;
 	std::string resultBoxText;
+	std::string historyBoxText;
 private:
 	XMLConfigReader *xmlConfigReader;
 	void updateTextBoxes(char p1Move, char p2Move);

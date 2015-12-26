@@ -25,6 +25,7 @@ public:
 	void addAdapter(Adapter* adapter);
 	void printHistory();
 	std::string getName();
+	void setName(std::string name);
 	std::list<Rule*> getRules();
 	std::list<Adapter*> getAdapters();
 	int getWin();

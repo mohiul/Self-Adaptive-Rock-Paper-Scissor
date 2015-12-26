@@ -12,6 +12,8 @@
 #define window_height 480
 #define textbox_width 150
 #define textbox_height 215
+#define resultbox_width 130
+#define resultbox_height 155
 
 enum
 {
@@ -27,6 +29,7 @@ enum
 GLUI *glui;
 
 GLUI_EditText *initFile;
+GLUI_TextBox *resultTextBox;
 GLUI_TextBox *historyTextBox;
 GLUI_TextBox *rulesTextBox;
 GLUI_TextBox *actionTextBox;
@@ -39,15 +42,10 @@ GLUI_Button *ctlRock;
 GLUI_Button *ctlPaper;
 GLUI_Button *ctlScissor;
 
-enum Radio {
-	PLAY,
-	EXPERIMENT
-};
-
 int radioSelection = EXPERIMENT;
+int iterations = 100;
 
 RPSGame *rpsGame;
-int iterations = 100;
 
 /** Termination */
 void exit() {
@@ -84,6 +82,7 @@ void control(int key)
     		break;
     	case EXPERIMENT:
 			rpsGame->play(iterations);
+			rpsGame->printResult();
 			ctlStop->enable();
     		break;
     	}
@@ -92,7 +91,9 @@ void control(int key)
 
     case STOP_BTN:
     	if(rpsGame != NULL){
-			rpsGame->printResult();
+    		if(radioSelection == PLAY){
+    			rpsGame->printResult();
+    		}
     		rpsGame->~RPSGame();
     		rpsGame = NULL;
     	}
@@ -142,7 +143,12 @@ int main(int argc, char** argv)
     initFile->set_text("/home/mohiul/workspace-cpp/self-adaptive-rps-code/SelfAdaptiveRPS/initialconfig.xml");
     iterationSpnr = new GLUI_Spinner( controlPanel, "Iterations:", &iterations);
     iterationSpnr->set_int_limits( 10, 10000 );
-    glui->add_column(false);
+
+    GLUI_Panel *resultPanel = glui->add_panel_to_panel(controlPanel, "Result");
+    resultTextBox = new GLUI_TextBox(resultPanel, true, 1, control);
+    resultTextBox->set_h(resultbox_height);
+    resultTextBox->set_w(resultbox_width);
+    glui->add_column_to_panel(controlPanel, false);
 
     GLUI_Panel *selectPanel = glui->add_panel_to_panel(controlPanel, "Select");
 
@@ -163,9 +169,10 @@ int main(int argc, char** argv)
     ctlStop = glui->add_button_to_panel(experimentPanel, "Stop", STOP_BTN, control);
     ctlStop->disable();
     ctlExit = glui->add_button_to_panel(experimentPanel, "Exit", EXIT_BTN, control);
+    glui->add_column(false);
 
     GLUI_Panel *historyPanel = glui->add_panel("History");
-    historyTextBox = new GLUI_TextBox(historyPanel,true,1,control);
+    historyTextBox = new GLUI_TextBox(historyPanel, true, 1, control);
     historyTextBox->set_h(textbox_height);
     historyTextBox->set_w(textbox_width);
     glui->add_column(false);

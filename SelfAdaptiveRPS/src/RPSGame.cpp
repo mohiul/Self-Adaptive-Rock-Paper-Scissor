@@ -12,12 +12,18 @@
 #include "SelfAdaptiveRPS.h"
 #include "Adapter.h"
 
+int RPSGame::gameNo = 0;
+
 RPSGame::RPSGame(std::string configFile) {
 	player1 = NULL;
 	player2 = NULL;
 	gameIteration = 0;
+	gameNo++;
 	xmlConfigReader = new XMLConfigReader(this);
 	xmlConfigReader->readConfigFile(configFile);
+	if(radioSelection == PLAY){
+		player2->setName("You");
+	}
 }
 
 RPSGame::~RPSGame() {
@@ -40,11 +46,17 @@ void RPSGame::updateTextBoxes(char p1Move, char p2Move) {
 			<< std::endl;
 	oss.str("");
 	oss.clear();
-	oss << printRules(player1) << printRules(player2);
+	oss << printRules(player1);
+	if(radioSelection == EXPERIMENT){
+		oss << printRules(player2);
+	}
 	rulesTextBox->set_text(oss.str().c_str());
 	oss.str("");
 	oss.clear();
-	oss << printAdapters(player1) << printAdapters(player2);
+	oss << printAdapters(player1);
+	if(radioSelection == EXPERIMENT){
+		oss << printAdapters(player2);
+	}
 	actionTextBox->set_text(oss.str().c_str());
 }
 
@@ -123,14 +135,20 @@ std::string RPSGame::printAdapters(Player *player) {
 }
 
 void RPSGame::printResult() {
-	std::cout << player1->getName()
-			<< " Win: " << player1->getWin()
-			<< " Loose: " << player1->getLoose()
-			<< " Draw: " << player1->getDraw()
+	std::ostringstream oss;
+	oss << resultTextBox->get_text();
+	oss << "Game No: " << gameNo << std::endl;
+	oss << player1->getName()
+			<< " W: " << player1->getWin()
+			<< " L: " << player1->getLoose()
+			<< " D: " << player1->getDraw()
 			<< std::endl;
-	std::cout << player2->getName()
-			<< " Win: " << player2->getWin()
-			<< " Loose: " << player2->getLoose()
-			<< " Draw: " << player2->getDraw()
+	oss << player2->getName()
+			<< " W: " << player2->getWin()
+			<< " L: " << player2->getLoose()
+			<< " D: " << player2->getDraw()
 			<< std::endl;
+	std::string result = oss.str();
+	resultTextBox->set_text(result.c_str());
+	std::cout << result;
 }

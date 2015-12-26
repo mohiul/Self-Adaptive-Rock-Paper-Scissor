@@ -30,6 +30,7 @@ public:
 protected:
 	Player *player1;
 	Player *player2;
+	static int gameNo;
 	int gameIteration;
 private:
 	XMLConfigReader *xmlConfigReader;

@@ -18,6 +18,7 @@
 extern GLUI *glui;
 
 extern GLUI_EditText *initFile;
+extern GLUI_TextBox *resultTextBox;
 extern GLUI_TextBox *historyTextBox;
 extern GLUI_TextBox *rulesTextBox;
 extern GLUI_TextBox *actionTextBox;
@@ -28,10 +29,19 @@ extern GLUI_Button *ctlRock;
 extern GLUI_Button *ctlPaper;
 extern GLUI_Button *ctlScissor;
 
+enum Radio {
+	PLAY,
+	EXPERIMENT
+};
+
+extern int radioSelection;
+
 enum Move {
 	ROCK,
 	PAPER,
 	SCISSOR
 };
+
+extern int iterations;
 
 #endif /* SELFADAPTIVERPS_H_ */

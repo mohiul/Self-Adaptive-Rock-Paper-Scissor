@@ -11,6 +11,7 @@
 #include <iostream>
 #include <list>
 
+#include "SelfAdaptiveRPS.h"
 #include "Player.h"
 #include "XMLConfigReader.h"
 
@@ -22,15 +23,18 @@ public:
 	RPSGame(std::string configFile);
 	virtual ~RPSGame();
 	void play(int noOfGame);
+	void playOneMove(Move move);
 	std::string printRules(Player *player);
 	std::string printAdapters(Player *player);
 	void printResult();
 protected:
 	Player *player1;
 	Player *player2;
-
+	int gameIteration;
 private:
 	XMLConfigReader *xmlConfigReader;
+	void updateTextBoxes(char p1Move, char p2Move);
+	char getMoveFromEnum(Move move);
 };
 
 #endif /* RPSGAME_H_ */

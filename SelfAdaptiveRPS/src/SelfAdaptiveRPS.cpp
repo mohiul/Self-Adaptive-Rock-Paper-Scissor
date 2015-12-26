@@ -15,13 +15,13 @@
 
 enum
 {
-	START,
-    PAUSE,
-    STOP,
-	ROCK,
-    PAPER,
-    SCISSOR,
-	EXIT
+	START_BTN,
+    PAUSE_BTN,
+    STOP_BTN,
+	ROCK_BTN,
+    PAPER_BTN,
+    SCISSOR_BTN,
+	EXIT_BTN
 };
 
 GLUI *glui;
@@ -30,6 +30,8 @@ GLUI_EditText *initFile;
 GLUI_TextBox *historyTextBox;
 GLUI_TextBox *rulesTextBox;
 GLUI_TextBox *actionTextBox;
+GLUI_Spinner *iterationSpnr;
+GLUI_RadioGroup *radioGroup;
 GLUI_Button *ctlStart;
 GLUI_Button *ctlStop;
 GLUI_Button *ctlExit;
@@ -37,13 +39,29 @@ GLUI_Button *ctlRock;
 GLUI_Button *ctlPaper;
 GLUI_Button *ctlScissor;
 
+enum Radio {
+	PLAY,
+	EXPERIMENT
+};
+
+int radioSelection = EXPERIMENT;
+
 RPSGame *rpsGame;
 int iterations = 100;
 
 /** Termination */
-void exit()
-{
+void exit() {
 	exit(0);
+}
+
+void clear(){
+	historyTextBox->set_text("");
+	rulesTextBox->set_text("");
+	actionTextBox->set_text("");
+	if(rpsGame != NULL){
+		rpsGame->~RPSGame();
+		rpsGame = NULL;
+	}
 }
 
 /**
@@ -53,27 +71,48 @@ void control(int key)
 {
     switch (key)
     {
-    case START:
+    case START_BTN:
+    	clear();
     	rpsGame = new RPSGame(std::string(initFile->get_text()));
-    	rpsGame->play(iterations);
-    	rpsGame->printResult();
-    	ctlStop->enable();
+    	switch(radioSelection){
+    	case PLAY:
+    		iterationSpnr->disable();
+    		ctlRock->enable();
+    		ctlPaper->enable();
+    		ctlScissor->enable();
+    		ctlStop->enable();
+    		break;
+    	case EXPERIMENT:
+			rpsGame->play(iterations);
+			ctlStop->enable();
+    		break;
+    	}
+    	ctlStart->disable();
         break;
 
-    case STOP:
+    case STOP_BTN:
     	if(rpsGame != NULL){
+			rpsGame->printResult();
     		rpsGame->~RPSGame();
     		rpsGame = NULL;
     	}
+		ctlRock->disable();
+		ctlPaper->disable();
+		ctlScissor->disable();
+		ctlStop->disable();
+		ctlStart->enable();
 		break;
 
-    case ROCK:
+    case ROCK_BTN:
+    	rpsGame->playOneMove(ROCK);
 		break;
-    case PAPER:
+    case PAPER_BTN:
+    	rpsGame->playOneMove(PAPER);
 		break;
-    case SCISSOR:
+    case SCISSOR_BTN:
+    	rpsGame->playOneMove(SCISSOR);
 		break;
-    case EXIT:
+    case EXIT_BTN:
     	exit();
 		break;
    }
@@ -101,23 +140,29 @@ int main(int argc, char** argv)
     initFile->set_w(150);
     initFile->enable();
     initFile->set_text("/home/mohiul/workspace-cpp/self-adaptive-rps-code/SelfAdaptiveRPS/initialconfig.xml");
-    GLUI_Spinner *iteration = new GLUI_Spinner( controlPanel, "Iterations:", &iterations);
-    iteration->set_int_limits( 10, 10000 );
+    iterationSpnr = new GLUI_Spinner( controlPanel, "Iterations:", &iterations);
+    iterationSpnr->set_int_limits( 10, 10000 );
     glui->add_column(false);
 
+    GLUI_Panel *selectPanel = glui->add_panel_to_panel(controlPanel, "Select");
+
+    radioGroup = glui->add_radiogroup_to_panel(selectPanel, &radioSelection);
+    glui->add_radiobutton_to_group(radioGroup, "Play");
+    glui->add_radiobutton_to_group(radioGroup, "Experiment");
+
     GLUI_Panel *playPanel = glui->add_panel_to_panel(controlPanel, "Play");
-    ctlRock = glui->add_button_to_panel(playPanel, "Rock", ROCK, control);
+    ctlRock = glui->add_button_to_panel(playPanel, "Rock", ROCK_BTN, control);
     ctlRock->disable();
-    ctlPaper = glui->add_button_to_panel(playPanel, "Paper", PAPER, control);
+    ctlPaper = glui->add_button_to_panel(playPanel, "Paper", PAPER_BTN, control);
     ctlPaper->disable();
-    ctlScissor = glui->add_button_to_panel(playPanel, "Scissor", SCISSOR, control);
+    ctlScissor = glui->add_button_to_panel(playPanel, "Scissor", SCISSOR_BTN, control);
     ctlScissor->disable();
 
     GLUI_Panel *experimentPanel = glui->add_panel_to_panel(controlPanel, "Experiment");
-    ctlStart = glui->add_button_to_panel(experimentPanel, "Start", START, control);
-    ctlStop = glui->add_button_to_panel(experimentPanel, "Stop", STOP, control);
+    ctlStart = glui->add_button_to_panel(experimentPanel, "Start", START_BTN, control);
+    ctlStop = glui->add_button_to_panel(experimentPanel, "Stop", STOP_BTN, control);
     ctlStop->disable();
-    ctlExit = glui->add_button_to_panel(experimentPanel, "Exit", EXIT, control);
+    ctlExit = glui->add_button_to_panel(experimentPanel, "Exit", EXIT_BTN, control);
 
     GLUI_Panel *historyPanel = glui->add_panel("History");
     historyTextBox = new GLUI_TextBox(historyPanel,true,1,control);

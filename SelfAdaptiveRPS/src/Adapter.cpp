@@ -13,7 +13,8 @@ Adapter::Adapter(Rule *rule) {
 }
 
 Adapter::~Adapter() {
-	// TODO Auto-generated destructor stub
+	rule->~Rule();
+	actions.clear();
 }
 
 void Adapter::addAction(Action action){

@@ -28,4 +28,10 @@ extern GLUI_Button *ctlRock;
 extern GLUI_Button *ctlPaper;
 extern GLUI_Button *ctlScissor;
 
+enum Move {
+	ROCK,
+	PAPER,
+	SCISSOR
+};
+
 #endif /* SELFADAPTIVERPS_H_ */

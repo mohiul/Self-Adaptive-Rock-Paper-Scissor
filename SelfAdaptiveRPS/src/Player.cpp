@@ -17,14 +17,26 @@ Player::Player(std::string name) {
 }
 
 Player::~Player() {
-	// TODO Auto-generated destructor stub
+	history.clear();
+	for (std::list<Rule*>::const_iterator iterator = rules.begin();
+			iterator != rules.end();
+			++iterator) {
+		(*iterator)->~Rule();
+	}
+	rules.clear();
+	for (std::list<Adapter*>::const_iterator iterator = adapters.begin();
+			iterator != adapters.end();
+			++iterator) {
+		(*iterator)->~Adapter();
+	}
+	adapters.clear();
 }
 
 char Player::nextMove() {
 	char moveToReturn = 0;
+	bool match = false;
 	if(history.size() > 0){
 		std::list<Rule*>::const_iterator iterator;
-		bool match = false;
 		for (iterator = rules.begin(); iterator != rules.end(); ++iterator) {
 		    Rule* rule = *iterator;
 		    const char *expr = rule->getCondition().c_str();
@@ -46,10 +58,8 @@ char Player::nextMove() {
 		    	break;
 		    }
 		}
-	    if(!match){
-	    	moveToReturn = nextRandomMove();
-	    }
-	} else {
+	}
+	if(!match){
 		moveToReturn = nextRandomMove();
 	}
 	return moveToReturn;

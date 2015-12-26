@@ -15,7 +15,7 @@ Rule::Rule(std::string condition, char action) {
 }
 
 Rule::~Rule() {
-	// TODO Auto-generated destructor stub
+
 }
 
 std::string Rule::getCondition(){

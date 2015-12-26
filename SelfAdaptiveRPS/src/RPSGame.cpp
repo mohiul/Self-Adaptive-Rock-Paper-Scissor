@@ -15,42 +15,80 @@
 RPSGame::RPSGame(std::string configFile) {
 	player1 = NULL;
 	player2 = NULL;
+	gameIteration = 0;
 	xmlConfigReader = new XMLConfigReader(this);
 	xmlConfigReader->readConfigFile(configFile);
 }
 
 RPSGame::~RPSGame() {
-	// TODO Auto-generated destructor stub
+	player1->~Player();
+	player2->~Player();
+	xmlConfigReader->~XMLConfigReader();
+}
+
+void RPSGame::updateTextBoxes(char p1Move, char p2Move) {
+	std::ostringstream oss;
+	if(gameIteration > 0){
+		oss << historyTextBox->get_text() << "\n";
+	}
+	oss << gameIteration << ": "
+			<< player1->getName() << ": " << p1Move << " | "
+			<< player2->getName() << ": " << p2Move;
+	historyTextBox->set_text(oss.str().c_str());
+	std::cout << "Itr " << gameIteration << ": " << player1->getName() << ": "
+			<< p1Move << " " << player2->getName() << ": " << p2Move
+			<< std::endl;
+	oss.str("");
+	oss.clear();
+	oss << printRules(player1) << printRules(player2);
+	rulesTextBox->set_text(oss.str().c_str());
+	oss.str("");
+	oss.clear();
+	oss << printAdapters(player1) << printAdapters(player2);
+	actionTextBox->set_text(oss.str().c_str());
+}
+
+char RPSGame::getMoveFromEnum(Move move){
+	char toReturn = 0;
+	switch(move){
+	case ROCK:
+		toReturn = 'R';
+		break;
+	case PAPER:
+		toReturn = 'P';
+		break;
+	case SCISSOR:
+		toReturn = 'S';
+		break;
+	default:
+		std::cerr << "Move doesn't exist!" << std::endl;
+	}
+	return toReturn;
+}
+
+void RPSGame::playOneMove(Move move) {
+	char p1Move = player1->nextMove();
+	char p2Move = getMoveFromEnum(move);
+	player1->addHistory(p1Move, p2Move);
+	player2->addHistory(p2Move, p1Move);
+
+	updateTextBoxes(p1Move, p2Move);
+
+	player1->printHistory();
+	player2->printHistory();
+
+	gameIteration++;
 }
 
 void RPSGame::play(int noOfGame) {
 
-	for(int i = 0; i < noOfGame; i++){
+	for(gameIteration = 0; gameIteration < noOfGame; gameIteration++){
 		char p1Move = player1->nextMove();
 		char p2Move = player2->nextMove();
 		player1->addHistory(p1Move, p2Move);
 		player2->addHistory(p2Move, p1Move);
 
-	    std::ostringstream oss;
-	    oss << historyTextBox->get_text() << "\n" << i << ": "
-				<< player1->getName() << ": "<< p1Move << " | "
-				<< player2->getName() << ": " << p2Move;
-	    historyTextBox->set_text(oss.str().c_str());
-
-		std::cout << "Itr " << i << ": "
-				<< player1->getName() << ": "<< p1Move << " "
-				<< player2->getName() << ": " << p2Move << std::endl;
-
-		oss.str("");
-		oss.clear();
-		oss << printRules(player1) << printRules(player2);
-	    rulesTextBox->set_text(oss.str().c_str());
-
-		oss.str("");
-		oss.clear();
-		oss << printAdapters(player1) << printAdapters(player2);
-	    actionTextBox->set_text(oss.str().c_str());
-
+		updateTextBoxes(p1Move, p2Move);
 	}
 	player1->printHistory();
 	player2->printHistory();

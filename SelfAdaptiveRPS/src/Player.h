@@ -26,6 +26,8 @@ public:
 	void addRule(Rule* rule);
 	void addAdapter(Adapter* adapter);
 	void printHistory();
+	void printHistory(list<char> history);
+	void printRuleList(list<Rule*> ruleList);
 	string getEntireHistoryStr();
 	string getCurrentHistoryStr(bool flipStr);
 	string getName();

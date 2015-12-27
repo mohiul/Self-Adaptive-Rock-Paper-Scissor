@@ -16,13 +16,17 @@ protected:
 	std::string condition;
 	char action;
 	int specifcity;
+	int howRecent;
 public:
 	Rule(std::string condition, char action);
 	virtual ~Rule();
 	std::string getCondition();
 	char getAction();
 	std::string getString();
+	std::string getDetailString();
 	int getSpecificity();
+	void setHowRecent(int howRecent);
+	int getHowRecent();
 protected:
 };
 

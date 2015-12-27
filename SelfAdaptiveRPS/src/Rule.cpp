@@ -12,6 +12,7 @@
 Rule::Rule(std::string condition, char action) {
 	this->condition = condition;
 	this->action = action;
+	howRecent = 0;
 	specifcity = 0;
 	for(unsigned int i = 0; i < condition.length(); i++){
 		if(condition.at(i) == '?'){
@@ -50,6 +51,21 @@ std::string Rule::getString() {
 	return oss.str();
 }
 
+std::string Rule::getDetailString() {
+	std::ostringstream oss;
+	oss << condition << ":" << action << " specificity: " << specifcity << " how recent: " << howRecent;
+	return oss.str();
+}
+
+
 int Rule::getSpecificity(){
 	return specifcity;
+}
+
+void Rule::setHowRecent(int howRecent){
+	this->howRecent = howRecent;
+}
+
+int Rule::getHowRecent(){
+	return howRecent;
 }

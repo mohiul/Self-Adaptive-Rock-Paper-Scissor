@@ -9,8 +9,10 @@
 #include <sstream>
 #include <iostream>
 #include <string>
+#include <algorithm>
 #include "Player.h"
 #include "SelfAdaptiveRPS.h"
+#include "Utils.h"
 
 Player::Player(string name) {
 	this->name = name;
@@ -96,15 +98,38 @@ struct CompareRuleSpecificity {
     bool operator()(Rule * lhs, Rule * rhs) {return lhs->getSpecificity() > rhs->getSpecificity();}
 };
 
+struct CompareRuleHowRecent {
+    bool operator()(Rule * lhs, Rule * rhs) {return lhs->getHowRecent() > rhs->getHowRecent();}
+};
+
 char Player::nextMove() {
 	char moveToReturn = 0;
-	list<Rule*> matchedRules = matchRules(history);
+	string historyStr(Utils::convertListToArray(history));
+	int strLength = historyStr.length();
+	list<Rule*> matchedRules;
+	for(int i = 0; i < strLength; i++){
+		list<char> historySubList = Utils::convertStrToList(historyStr.substr(i, strLength));
+		list<Rule*> newMatchedRules = matchRules(historySubList);
+		list<Rule*>::const_iterator iterator;
+		for (iterator = newMatchedRules.begin(); iterator != newMatchedRules.end(); ++iterator) {
+			Rule *newMatchedRule = *iterator;
+			if(find(matchedRules.begin(), matchedRules.end(), newMatchedRule) == matchedRules.end()){
+//				cout << "not found: " << endl;
+				newMatchedRule->setHowRecent(-i);
+				matchedRules.push_back(newMatchedRule);
+			}
+		}
+	}
 	if(matchedRules.size() == 0){
 		moveToReturn = nextRandomMove();
 	} else {
+//		printRuleList(matchedRules);
+		matchedRules.sort(CompareRuleHowRecent());
+//		printRuleList(matchedRules);
 		matchedRules.sort(CompareRuleSpecificity());
+//		printRuleList(matchedRules);
 		Rule *rule = matchedRules.front();
-		cout << "Using Rule : " << rule->getString() << endl;
+		cout << "Using Rule : " << rule->getDetailString() << endl;
 		moveToReturn = rule->getAction();
 	}
 	return moveToReturn;
@@ -213,6 +238,24 @@ void Player::printHistory(){
 	cout << endl;
 }
 
+void Player::printHistory(list<char> history){
+	list<char>::const_iterator iterator;
+	cout << name << " history: ";
+	for (iterator = history.begin(); iterator != history.end(); ++iterator) {
+	    cout << " " << *iterator;
+	}
+	cout << endl;
+}
+
+void Player::printRuleList(list<Rule*> ruleList){
+	list<Rule*>::const_iterator iterator;
+	cout << name << " rule list begin: " << endl;
+	for (iterator = ruleList.begin(); iterator != ruleList.end(); ++iterator) {
+		cout << (*iterator)->getDetailString() << endl;
+	}
+	cout << name << " rule list end: " << endl;
+}
+
 list<Rule*> Player::getRules(){
 	return rules;
 }
@@ -241,14 +284,13 @@ int Player::getDraw() {
 	return drawCount;
 }
 
-
 /*
 int main(int argc, char** argv)
 {
 	Player *p = new Player("P");
-	Rule *r1 = new Rule("012345?48", 'R');
-	Rule *r2 = new Rule("0>0<83", 'P');
-	Rule *r3 = new Rule("0?34", 'P');
+	Rule *r1 = new Rule("2>0<85", 'P');
+	Rule *r2 = new Rule("0?34", 'P');
+	Rule *r3 = new Rule("012345?48", 'R');
 	cout << "r1 specificity: " << r1->getSpecificity() << endl;
 	cout << "r2 specificity: " << r2->getSpecificity() << endl;
 	cout << "r3 specificity: " << r3->getSpecificity() << endl;

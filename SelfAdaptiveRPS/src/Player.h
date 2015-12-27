@@ -14,9 +14,11 @@
 #include "Rule.h"
 #include "Adapter.h"
 
+using namespace std;
+
 class Player {
 public:
-	Player(std::string name);
+	Player(string name);
 	virtual ~Player();
 	char nextMove();
 	char nextRandomMove();
@@ -24,25 +26,28 @@ public:
 	void addRule(Rule* rule);
 	void addAdapter(Adapter* adapter);
 	void printHistory();
-	std::string getEntireHistoryStr();
-	std::string getCurrentHistoryStr(bool flipStr);
-	std::string getName();
-	void setName(std::string name);
-	std::list<Rule*> getRules();
-	std::list<Adapter*> getAdapters();
+	string getEntireHistoryStr();
+	string getCurrentHistoryStr(bool flipStr);
+	string getName();
+	void setName(string name);
+	list<Rule*> getRules();
+	list<Adapter*> getAdapters();
 	int getWin();
 	int getLoose();
 	int getDraw();
 protected:
-	std::string name;
+	string name;
 	int winCount;
 	int looseCount;
 	int drawCount;
-	std::list<char> resultHistory;
-	std::list<char> moveHistory;
-	std::list<char> history;
-	std::list<Rule*> rules;
-	std::list<Adapter*> adapters;
+	list<char> resultHistory;
+	list<char> moveHistory;
+	list<char> history;
+	list<Rule*> rules;
+	list<Adapter*> adapters;
+	list<Rule*> matchRules(list<char> history);
+private:
+
 };
 
 #endif /* PLAYER_H_ */

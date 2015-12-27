@@ -12,7 +12,7 @@
 #include "Player.h"
 #include "SelfAdaptiveRPS.h"
 
-Player::Player(std::string name) {
+Player::Player(string name) {
 	this->name = name;
 	winCount = 0;
 	looseCount = 0;
@@ -21,18 +21,75 @@ Player::Player(std::string name) {
 
 Player::~Player() {
 	history.clear();
-	for (std::list<Rule*>::const_iterator iterator = rules.begin();
+	for (list<Rule*>::const_iterator iterator = rules.begin();
 			iterator != rules.end();
 			++iterator) {
 		(*iterator)->~Rule();
 	}
 	rules.clear();
-	for (std::list<Adapter*>::const_iterator iterator = adapters.begin();
+	for (list<Adapter*>::const_iterator iterator = adapters.begin();
 			iterator != adapters.end();
 			++iterator) {
 		(*iterator)->~Adapter();
 	}
 	adapters.clear();
+}
+
+list<Rule*> Player::matchRules(list<char> history) {
+	list<Rule*> matchedRules;
+	if (history.size() > 0) {
+		list<Rule*>::const_iterator iterator;
+		for (iterator = rules.begin(); iterator != rules.end(); ++iterator) {
+			Rule* rule = *iterator;
+			string expr = rule->getCondition();
+			//cout << "expr: " << expr << endl;
+			bool match = false;
+			unsigned int i;
+			list<char>::const_iterator historyItr;
+			for (i = 0, historyItr = history.begin();
+					i < expr.length() && historyItr != history.end();
+					i++, historyItr++) {
+				char historyVal = *historyItr;
+				char expr_ch = expr.at(i);
+				//cout << "historyVal: " << historyVal << " expr_ch: " << expr_ch << endl;
+				if (expr_ch == '?') {
+					int nextNo = (int) (toDigit(expr.at(++i))) - 1;
+					//cout << "ignoreNo: " << nextNo << endl;
+					while (nextNo > 0 && historyItr != history.end()) {
+						historyItr++;
+						nextNo--;
+					}
+					if (nextNo <= 0 && historyItr != history.end()) {
+						continue;
+					} else {
+						break;
+					}
+				} else if (expr_ch == '<') {
+					int nextNo = (int) (toDigit(expr.at(++i)));
+					int historyNo = (int) (toDigit(historyVal));
+					if (historyNo < nextNo) {
+						continue;
+					}
+				} else if (expr_ch == '>') {
+					int nextNo = (int) (toDigit(expr.at(++i)));
+					int historyNo = (int) (toDigit(historyVal));
+					if (historyNo > nextNo) {
+						continue;
+					}
+				} else if (historyVal != expr_ch) {
+					break;
+				}
+			}
+			if (i == expr.length())
+				match = true;
+
+			if (match) {
+				matchedRules.push_back(rule);
+				cout << "Rule matched: " << rule->getString() << endl;
+			}
+		}
+	}
+	return matchedRules;
 }
 
 struct CompareRuleSpecificity {
@@ -41,62 +98,13 @@ struct CompareRuleSpecificity {
 
 char Player::nextMove() {
 	char moveToReturn = 0;
-	std::list<Rule*> matchedRules;
-	if(history.size() > 0){
-		std::list<Rule*>::const_iterator iterator;
-		for (iterator = rules.begin(); iterator != rules.end(); ++iterator) {
-		    Rule* rule = *iterator;
-		    std::string expr = rule->getCondition();
-//		    std::cout << "expr: " << expr << std::endl;
-		    bool match = false;
-		    unsigned int i; std::list<char>::const_iterator historyItr;
-		    for(i = 0, historyItr = history.begin();
-		    		i < expr.length() && historyItr != history.end();
-		    		i++, historyItr++){
-		    	char historyVal = *historyItr;
-		    	char expr_ch = expr.at(i);
-//	    		std::cout << "historyVal: " << historyVal << " expr_ch: " << expr_ch << std::endl;
-		    	if(expr_ch == '?'){
-		    		int nextNo = (int)toDigit(expr.at(++i)) - 1;
-//		    		std::cout << "ignoreNo: " << nextNo << std::endl;
-		    		while(nextNo > 0 && historyItr != history.end()){
-		    			historyItr++;
-		    			nextNo--;
-		    		}
-		    		if(nextNo <= 0 && historyItr != history.end()){
-		    			continue;
-		    		} else {
-		    			break;
-		    		}
-		    	}else if(expr_ch == '<'){
-		    		int nextNo = (int)toDigit(expr.at(++i));
-		    		int historyNo = (int)toDigit(historyVal);
-		    		if(historyNo < nextNo){
-		    			continue;
-		    		}
-		    	}else if(expr_ch == '>'){
-		    		int nextNo = (int)toDigit(expr.at(++i));
-		    		int historyNo = (int)toDigit(historyVal);
-		    		if(historyNo > nextNo){
-		    			continue;
-		    		}
-		    	}else if(historyVal != expr_ch) {
-					break;
-		    	}
-		    }
-		    if(i == expr.length()) match = true;
-		    if(match){
-		    	matchedRules.push_back(rule);
-		    	std::cout << "Rule matched: " << rule->getString() << std::endl;
-		    }
-		}
-	}
+	list<Rule*> matchedRules = matchRules(history);
 	if(matchedRules.size() == 0){
 		moveToReturn = nextRandomMove();
 	} else {
 		matchedRules.sort(CompareRuleSpecificity());
 		Rule *rule = matchedRules.front();
-		std::cout << "Using Rule : " << rule->getString() << std::endl;
+		cout << "Using Rule : " << rule->getString() << endl;
 		moveToReturn = rule->getAction();
 	}
 	return moveToReturn;
@@ -171,23 +179,23 @@ void Player::addAdapter(Adapter* adapter) {
 	adapters.push_back(adapter);
 }
 
-std::string Player::getEntireHistoryStr(){
-	std::ostringstream oss;
-	std::list<char>::const_iterator iterator;
+string Player::getEntireHistoryStr(){
+	ostringstream oss;
+	list<char>::const_iterator iterator;
 	for (iterator = history.begin(); iterator != history.end(); ++iterator) {
 		oss << " " << *iterator;
 	}
-	oss << std::endl;
+	oss << endl;
 
 	for (iterator = moveHistory.begin(); iterator != moveHistory.end(); ++iterator) {
 		oss << " " << *iterator;
 	}
-	oss << std::endl;
+	oss << endl;
 	return oss.str();
 }
 
-std::string Player::getCurrentHistoryStr(bool flipStr){
-	std::ostringstream oss;
+string Player::getCurrentHistoryStr(bool flipStr){
+	ostringstream oss;
 	if(flipStr){
 		oss << moveHistory.front() << " " << history.front() << " " << resultHistory.front();
 	} else {
@@ -197,27 +205,27 @@ std::string Player::getCurrentHistoryStr(bool flipStr){
 }
 
 void Player::printHistory(){
-	std::list<char>::const_iterator iterator;
-	std::cout << name << " history: ";
+	list<char>::const_iterator iterator;
+	cout << name << " history: ";
 	for (iterator = history.begin(); iterator != history.end(); ++iterator) {
-	    std::cout << " " << *iterator;
+	    cout << " " << *iterator;
 	}
-	std::cout << std::endl;
+	cout << endl;
 }
 
-std::list<Rule*> Player::getRules(){
+list<Rule*> Player::getRules(){
 	return rules;
 }
 
-std::list<Adapter*> Player::getAdapters(){
+list<Adapter*> Player::getAdapters(){
 	return adapters;
 }
 
-void Player::setName(std::string name){
+void Player::setName(string name){
 	this->name = name;
 }
 
-std::string Player::getName(){
+string Player::getName(){
 	return name;
 }
 
@@ -233,6 +241,7 @@ int Player::getDraw() {
 	return drawCount;
 }
 
+
 /*
 int main(int argc, char** argv)
 {
@@ -240,9 +249,9 @@ int main(int argc, char** argv)
 	Rule *r1 = new Rule("012345?48", 'R');
 	Rule *r2 = new Rule("0>0<83", 'P');
 	Rule *r3 = new Rule("0?34", 'P');
-	std::cout << "r1 specificity: " << r1->getSpecificity() << std::endl;
-	std::cout << "r2 specificity: " << r2->getSpecificity() << std::endl;
-	std::cout << "r3 specificity: " << r3->getSpecificity() << std::endl;
+	cout << "r1 specificity: " << r1->getSpecificity() << endl;
+	cout << "r2 specificity: " << r2->getSpecificity() << endl;
+	cout << "r3 specificity: " << r3->getSpecificity() << endl;
 	p->addRule(r1);
 	p->addRule(r2);
 	p->addRule(r3);
@@ -259,7 +268,7 @@ int main(int argc, char** argv)
 	p->addHistory('P', 'S');
 	p->addHistory('R', 'P');
 	p->printHistory();
-	std::cout << "next move: " << p->nextMove();
+	cout << "next move: " << p->nextMove();
 	return 0;
 }
 */

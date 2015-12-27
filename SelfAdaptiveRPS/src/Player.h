@@ -13,21 +13,22 @@
 
 #include "Rule.h"
 #include "Adapter.h"
+#include "RuleParser.h"
 
 using namespace std;
+class RuleParser;
 
 class Player {
+	friend class RuleParser;
 public:
 	Player(string name);
 	virtual ~Player();
 	char nextMove();
-	char nextRandomMove();
 	void addHistory(char ownMove, char opponentMove);
 	void addRule(Rule* rule);
 	void addAdapter(Adapter* adapter);
 	void printHistory();
 	void printHistory(list<char> history);
-	void printRuleList(list<Rule*> ruleList);
 	string getEntireHistoryStr();
 	string getCurrentHistoryStr(bool flipStr);
 	string getName();
@@ -38,6 +39,7 @@ public:
 	int getLoose();
 	int getDraw();
 protected:
+	RuleParser *parser;
 	string name;
 	int winCount;
 	int looseCount;
@@ -47,7 +49,6 @@ protected:
 	list<char> history;
 	list<Rule*> rules;
 	list<Adapter*> adapters;
-	list<Rule*> matchRules(list<char> history);
 private:
 
 };

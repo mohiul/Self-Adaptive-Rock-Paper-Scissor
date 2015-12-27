@@ -15,12 +15,14 @@ class Rule {
 protected:
 	std::string condition;
 	char action;
+	int specifcity;
 public:
 	Rule(std::string condition, char action);
 	virtual ~Rule();
 	std::string getCondition();
 	char getAction();
-	const char *getString();
+	std::string getString();
+	int getSpecificity();
 protected:
 };
 

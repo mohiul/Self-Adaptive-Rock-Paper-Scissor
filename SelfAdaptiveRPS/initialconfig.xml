@@ -7,12 +7,13 @@ This is the standard root tag of the XML file.
 
 <root>
   <player name="P1">
-	<rule>0?1:R</rule>
-	<rule>1?2:P</rule>
-	<rule>2?3:S</rule>
-	<rule>123?3:R</rule>
+  	<rule><![CDATA[0?21:R]]></rule>
+  	<rule><![CDATA[0?11:R]]></rule>
+	<rule><![CDATA[1?12:P]]></rule>
+	<rule><![CDATA[2?13:S]]></rule>
+	<rule><![CDATA[123?13:R]]></rule>
   	<adapter>
-  		<condition>0?1:?</condition>
+  		<condition><![CDATA[=0?1=1:?]]></condition>
   		<action>ADD</action>
   		<action>MOD</action>	
   	</adapter>

@@ -62,6 +62,40 @@ void clear(){
 	}
 }
 
+void stop() {
+	if(rpsGame != NULL){
+		rpsGame->~RPSGame();
+		rpsGame = NULL;
+	}
+	ctlRock->disable();
+	ctlPaper->disable();
+	ctlScissor->disable();
+	ctlStop->disable();
+	ctlStart->enable();
+}
+
+void start() {
+	clear();
+	rpsGame = new RPSGame(std::string(initFile->get_text()));
+	switch(radioSelection){
+	case PLAY:
+		iterationSpnr->disable();
+		ctlRock->enable();
+		ctlPaper->enable();
+		ctlScissor->enable();
+		ctlStop->enable();
+		ctlStart->disable();
+		break;
+	case EXPERIMENT:
+		iterationSpnr->enable();
+		ctlStop->enable();
+		rpsGame->play(iterations);
+		rpsGame->printResult();
+		stop();
+		break;
+	}
+}
+
 /**
  * Callback function for all GLUI controls.
  */
@@ -70,36 +104,11 @@ void control(int key)
     switch (key)
     {
     case START_BTN:
-    	clear();
-    	rpsGame = new RPSGame(std::string(initFile->get_text()));
-    	switch(radioSelection){
-    	case PLAY:
-    		iterationSpnr->disable();
-    		ctlRock->enable();
-    		ctlPaper->enable();
-    		ctlScissor->enable();
-    		ctlStop->enable();
-    		break;
-    	case EXPERIMENT:
-			rpsGame->play(iterations);
-			rpsGame->printResult();
-			ctlStop->enable();
-			iterationSpnr->enable();
-    		break;
-    	}
-    	ctlStart->disable();
+    	start();
         break;
 
     case STOP_BTN:
-    	if(rpsGame != NULL){
-    		rpsGame->~RPSGame();
-    		rpsGame = NULL;
-    	}
-		ctlRock->disable();
-		ctlPaper->disable();
-		ctlScissor->disable();
-		ctlStop->disable();
-		ctlStart->enable();
+    	stop();
 		break;
 
     case ROCK_BTN:
@@ -181,7 +190,7 @@ int main(int argc, char** argv)
     rulesTextBox->set_w(textbox_width);
     glui->add_column(false);
 
-    GLUI_Panel *actionPanel = glui->add_panel("Action");
+    GLUI_Panel *actionPanel = glui->add_panel("Adapters");
     actionTextBox = new GLUI_TextBox(actionPanel,true,1,control);
     actionTextBox->set_h(textbox_height);
     actionTextBox->set_w(textbox_width);

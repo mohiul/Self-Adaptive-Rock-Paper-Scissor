@@ -8,6 +8,8 @@
 #ifndef SELFADAPTIVERPS_H_
 #define SELFADAPTIVERPS_H_
 
+#define toDigit(c) (c-'0')
+
 #include <iostream>
 #include <cstdlib>
 #include <time.h>

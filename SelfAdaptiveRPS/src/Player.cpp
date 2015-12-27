@@ -7,7 +7,10 @@
 
 #include <cstdlib>
 #include <sstream>
+#include <iostream>
+#include <string>
 #include "Player.h"
+#include "SelfAdaptiveRPS.h"
 
 Player::Player(std::string name) {
 	this->name = name;
@@ -32,35 +35,69 @@ Player::~Player() {
 	adapters.clear();
 }
 
+struct CompareRuleSpecificity {
+    bool operator()(Rule * lhs, Rule * rhs) {return lhs->getSpecificity() > rhs->getSpecificity();}
+};
+
 char Player::nextMove() {
 	char moveToReturn = 0;
-	bool match = false;
+	std::list<Rule*> matchedRules;
 	if(history.size() > 0){
 		std::list<Rule*>::const_iterator iterator;
 		for (iterator = rules.begin(); iterator != rules.end(); ++iterator) {
 		    Rule* rule = *iterator;
-		    const char *expr = rule->getCondition().c_str();
-		    match = false;
-		    int i; std::list<char>::const_iterator historyItr;
-		    for(i = sizeof(expr) - 2, historyItr = history.begin();
-		    		i >= 0 && historyItr != history.end();
-		    		i--, historyItr++){
+		    std::string expr = rule->getCondition();
+//		    std::cout << "expr: " << expr << std::endl;
+		    bool match = false;
+		    unsigned int i; std::list<char>::const_iterator historyItr;
+		    for(i = 0, historyItr = history.begin();
+		    		i < expr.length() && historyItr != history.end();
+		    		i++, historyItr++){
 		    	char historyVal = *historyItr;
-		    	if(expr[i] == '?'){
-		    		continue;
-		    	} else if(historyVal != expr[i]) {
-		    		break;
+		    	char expr_ch = expr.at(i);
+//	    		std::cout << "historyVal: " << historyVal << " expr_ch: " << expr_ch << std::endl;
+		    	if(expr_ch == '?'){
+		    		int nextNo = (int)toDigit(expr.at(++i)) - 1;
+//		    		std::cout << "ignoreNo: " << nextNo << std::endl;
+		    		while(nextNo > 0 && historyItr != history.end()){
+		    			historyItr++;
+		    			nextNo--;
+		    		}
+		    		if(nextNo <= 0 && historyItr != history.end()){
+		    			continue;
+		    		} else {
+		    			break;
+		    		}
+		    	}else if(expr_ch == '<'){
+		    		int nextNo = (int)toDigit(expr.at(++i));
+		    		int historyNo = (int)toDigit(historyVal);
+		    		if(historyNo < nextNo){
+		    			continue;
+		    		}
+		    	}else if(expr_ch == '>'){
+		    		int nextNo = (int)toDigit(expr.at(++i));
+		    		int historyNo = (int)toDigit(historyVal);
+		    		if(historyNo > nextNo){
+		    			continue;
+		    		}
+		    	}else if(historyVal != expr_ch) {
+					break;
 		    	}
 		    }
-		    if(i == -1) match = true;
+		    if(i == expr.length()) match = true;
 		    if(match){
-		    	moveToReturn = rule->getAction();
-		    	break;
+		    	matchedRules.push_back(rule);
+		    	std::cout << "Rule matched: " << rule->getString() << std::endl;
 		    }
 		}
 	}
-	if(!match){
+	if(matchedRules.size() == 0){
 		moveToReturn = nextRandomMove();
+	} else {
+		matchedRules.sort(CompareRuleSpecificity());
+		Rule *rule = matchedRules.front();
+		std::cout << "Using Rule : " << rule->getString() << std::endl;
+		moveToReturn = rule->getAction();
 	}
 	return moveToReturn;
 }
@@ -195,3 +232,34 @@ int Player::getLoose() {
 int Player::getDraw() {
 	return drawCount;
 }
+
+/*
+int main(int argc, char** argv)
+{
+	Player *p = new Player("P");
+	Rule *r1 = new Rule("012345?48", 'R');
+	Rule *r2 = new Rule("0>0<83", 'P');
+	Rule *r3 = new Rule("0?34", 'P');
+	std::cout << "r1 specificity: " << r1->getSpecificity() << std::endl;
+	std::cout << "r2 specificity: " << r2->getSpecificity() << std::endl;
+	std::cout << "r3 specificity: " << r3->getSpecificity() << std::endl;
+	p->addRule(r1);
+	p->addRule(r2);
+	p->addRule(r3);
+//	p->addRule(new Rule("0?11", 'R'));
+//	p->addRule(new Rule("2?13", 'S'));
+//	p->addRule(new Rule("123?13", 'R'));
+	p->addHistory('R', 'S');
+	p->addHistory('S', 'P');
+	p->addHistory('P', 'R');
+	p->addHistory('S', 'S');
+	p->addHistory('P', 'P');
+	p->addHistory('R', 'R');
+	p->addHistory('S', 'R');
+	p->addHistory('P', 'S');
+	p->addHistory('R', 'P');
+	p->printHistory();
+	std::cout << "next move: " << p->nextMove();
+	return 0;
+}
+*/

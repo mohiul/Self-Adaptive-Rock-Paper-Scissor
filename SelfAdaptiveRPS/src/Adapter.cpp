@@ -29,16 +29,16 @@ std::string Adapter::getString() {
 		Action action = *iterator;
 		switch(action){
 		case ADD:
-			oss << "ADD; ";
+			oss << "ADD;";
 			break;
 		case DEL:
-			oss << "DEL; ";
+			oss << "DEL;";
 			break;
 		case MOD:
-			oss << "MOD; ";
+			oss << "MOD;";
 			break;
 		case SHF:
-			oss << "SHF; ";
+			oss << "SHF;";
 			break;
 		}
 	}

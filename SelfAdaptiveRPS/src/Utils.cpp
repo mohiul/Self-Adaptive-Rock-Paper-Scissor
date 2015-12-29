@@ -5,6 +5,8 @@
  *      Author: mohiul
  */
 
+#include <iostream>
+#include <sstream>
 #include "Utils.h"
 
 Utils::Utils() {
@@ -14,6 +16,22 @@ Utils::Utils() {
 
 Utils::~Utils() {
 	// TODO Auto-generated destructor stub
+}
+
+std::string Utils::insertChar(std::string str, int position, char c){
+	std::string first = str.substr(0, position);
+	std::string second = str.substr(position, str.length());
+	std::stringstream os;
+	os << first << c << second;
+	return os.str();
+}
+
+std::string Utils::insertString(std::string str, int position, std::string strToInsert){
+	std::string first = str.substr(0, position);
+	std::string second = str.substr(position, str.length());
+	std::stringstream os;
+	os << first << strToInsert << second;
+	return os.str();
 }
 
 char *Utils::convertListToArray(std::list<char> listToConvert){

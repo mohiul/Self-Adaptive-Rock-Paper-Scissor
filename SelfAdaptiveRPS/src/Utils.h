@@ -15,6 +15,8 @@ class Utils {
 public:
 	Utils();
 	virtual ~Utils();
+	static std::string insertChar(std::string, int position, char c);
+	static std::string insertString(std::string, int position, std::string str);
 	static char *convertListToArray(std::list<char> listToConvert);
 	static std::list<char> convertStrToList(std::string strToConvert);
 };

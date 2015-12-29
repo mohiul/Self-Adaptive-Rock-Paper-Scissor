@@ -11,6 +11,7 @@
 #include <list>
 #include "Player.h"
 #include "Rule.h"
+#include "Utils.h"
 
 using namespace std;
 class Player;

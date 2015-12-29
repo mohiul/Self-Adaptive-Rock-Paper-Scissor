@@ -13,7 +13,7 @@ This is the standard root tag of the XML file.
 	<rule><![CDATA[2?13:S]]></rule>
 	<rule><![CDATA[123?13:R]]></rule>
   	<adapter>
-  		<condition><![CDATA[=0?1=1:?]]></condition>
+  		<rule><![CDATA[0?11:R]]></rule>
   		<action>ADD</action>
   		<action>MOD</action>	
   	</adapter>

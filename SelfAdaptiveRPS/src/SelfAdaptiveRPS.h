@@ -9,6 +9,7 @@
 #define SELFADAPTIVERPS_H_
 
 #define toDigit(c) (c-'0')
+#define toChar(i) (i+'0')
 
 #include <iostream>
 #include <cstdlib>

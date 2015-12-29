@@ -29,7 +29,7 @@ void XMLConfigReader::getRulesFromXML(TiXmlElement* playerElm, Player *player) {
 void XMLConfigReader::getAdaptersFromXML(TiXmlElement* playerElm, Player *player) {
 	for (TiXmlElement* adapterElm = playerElm->FirstChildElement("adapter");
 			adapterElm != NULL; adapterElm = adapterElm->NextSiblingElement("adapter")) {
-		TiXmlElement* conditionElm = adapterElm->FirstChildElement("condition");
+		TiXmlElement* conditionElm = adapterElm->FirstChildElement("rule");
 		if(conditionElm != NULL){
 			std::string rule = std::string(conditionElm->GetText());
 			int delimiterLoc = rule.find(":");

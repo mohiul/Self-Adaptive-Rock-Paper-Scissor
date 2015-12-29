@@ -10,23 +10,34 @@
 
 #include <iostream>
 #include <string>
+#include <set>
+
+enum RuleComparison{
+	GENERAL,
+	SPECIFIC,
+	EQUAL,
+	NOT_EQUAL
+};
+
+using namespace std;
 
 class Rule {
 protected:
-	std::string condition;
+	string condition;
 	char action;
 	int specifcity;
 	int howRecent;
 public:
-	Rule(std::string condition, char action);
+	Rule(string condition, char action);
 	virtual ~Rule();
-	std::string getCondition();
+	string getCondition();
 	char getAction();
-	std::string getString();
-	std::string getDetailString();
+	string getString();
+	string getDetailString();
 	int getSpecificity();
 	void setHowRecent(int howRecent);
 	int getHowRecent();
+	RuleComparison compare(Rule *rule);
 protected:
 };
 

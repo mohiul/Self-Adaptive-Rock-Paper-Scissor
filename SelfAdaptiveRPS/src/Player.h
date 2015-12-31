@@ -27,6 +27,7 @@ public:
 	void addHistory(char ownMove, char opponentMove);
 	void addRule(Rule* rule);
 	void addAdapter(Adapter* adapter);
+	void adapt();
 	void printHistory();
 	void printHistory(list<char> history);
 	string getEntireHistoryStr();
@@ -49,6 +50,10 @@ protected:
 	list<char> history;
 	list<Rule*> rules;
 	list<Adapter*> adapters;
+	void actionAdd(Rule *adapterRule);
+	void actionDelete(Rule *adapterRule);
+	void actionModify(Rule *adapterRule);
+	void actionShift(Rule *adapterRule);
 private:
 
 };

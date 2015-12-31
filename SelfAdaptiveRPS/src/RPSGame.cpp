@@ -106,7 +106,8 @@ void RPSGame::play(int noOfGame) {
 		char p2Move = player2->nextMove();
 		player1->addHistory(p1Move, p2Move);
 		player2->addHistory(p2Move, p1Move);
-
+		player1->adapt();
+		player2->adapt();
 		updateTextBoxes(p1Move, p2Move);
 	}
 	player1->printHistory();

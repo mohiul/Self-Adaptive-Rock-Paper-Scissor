@@ -28,6 +28,8 @@ public:
 	Adapter(Rule *rule);
 	virtual ~Adapter();
 	void addAction(Action action);
+	std::list<Action> getActions();
+	Rule *getRule();
 	std::string getString();
 };
 

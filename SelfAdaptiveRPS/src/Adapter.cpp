@@ -21,6 +21,14 @@ void Adapter::addAction(Action action){
 	actions.push_back(action);
 }
 
+std::list<Action> Adapter::getActions(){
+	return actions;
+}
+
+Rule *Adapter::getRule(){
+	return rule;
+}
+
 std::string Adapter::getString() {
 	std::ostringstream oss;
 	oss << rule->getString() << "-";

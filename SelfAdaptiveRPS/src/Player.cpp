@@ -95,6 +95,98 @@ void Player::addAdapter(Adapter* adapter) {
 	adapters.push_back(adapter);
 }
 
+void Player::adapt() {
+	list<Adapter*>::const_iterator iterator;
+	for (iterator = adapters.begin(); iterator != adapters.end(); ++iterator) {
+		Adapter *adapter = *iterator;
+		list<Action> actions = adapter->getActions();
+		list<Action>::const_iterator iterator;
+		for (iterator = actions.begin(); iterator != actions.end(); ++iterator) {
+			Action action = *iterator;
+			switch(action) {
+			case ADD:
+				actionAdd(adapter->getRule());
+				break;
+			case DEL:
+				actionDelete(adapter->getRule());
+				break;
+			case MOD:
+				actionModify(adapter->getRule());
+				break;
+			case SHF:
+				actionShift(adapter->getRule());
+				break;
+			}
+		}
+	}
+}
+
+void Player::actionAdd(Rule *adapterRule){
+	bool addRule = true;
+	list<Rule*>::const_iterator iterator;
+	for (iterator = rules.begin(); iterator != rules.end(); ++iterator) {
+		Rule *rule = *iterator;
+		RuleComparison comp = rule->compare(adapterRule);
+		switch(comp){
+		case GENERAL:
+			rules.remove(rule);
+			rules.push_back(adapterRule);
+			addRule = false;
+			break;
+		case SPECIFIC:
+			addRule = false;
+			break;
+		case EQUAL:
+			addRule = false;
+			break;
+		case NOT_EQUAL:
+			break;
+		}
+		if(!addRule){
+			break;
+		}
+	}
+	if(addRule){
+		rules.push_back(adapterRule);
+	}
+}
+
+void Player::actionDelete(Rule *adapterRule){
+	bool deleteRule = false;
+	list<Rule*>::const_iterator iterator;
+	for (iterator = rules.begin(); iterator != rules.end(); ++iterator) {
+		Rule *rule = *iterator;
+		RuleComparison comp = rule->compare(adapterRule);
+		switch(comp){
+		case GENERAL:
+			//Don't do anything
+			break;
+		case SPECIFIC:
+			deleteRule = true;
+			break;
+		case EQUAL:
+			deleteRule = true;
+			break;
+		case NOT_EQUAL:
+			break;
+		}
+		if(deleteRule){
+			break;
+		}
+	}
+	if(deleteRule){
+		rules.remove(adapterRule);
+	}
+}
+
+void Player::actionModify(Rule *adapterRule){
+
+}
+
+void Player::actionShift(Rule *adapterRule){
+
+}
+
 string Player::getEntireHistoryStr(){
 	ostringstream oss;
 	list<char>::const_iterator iterator;

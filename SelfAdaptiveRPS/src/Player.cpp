@@ -105,23 +105,49 @@ void Player::adapt() {
 			Action action = *iterator;
 			switch(action) {
 			case ADD:
-				actionAdd(adapter->getRule());
+				actionAddRule(adapter->getRule());
 				break;
 			case DEL:
-				actionDelete(adapter->getRule());
+				actionDeleteRule(adapter->getRule());
 				break;
 			case MOD:
-				actionModify(adapter->getRule());
+				actionModifyRule(adapter->getRule());
 				break;
 			case SHF:
-				actionShift(adapter->getRule());
+				actionShiftRule(adapter->getRule());
 				break;
 			}
 		}
 	}
 }
 
-void Player::actionAdd(Rule *adapterRule){
+void Player::selfAdapt() {
+	list<Adapter*>::const_iterator iterator;
+	for (iterator = adapters.begin(); iterator != adapters.end(); ++iterator) {
+		Adapter *adapter = *iterator;
+		list<Action> actions = adapter->getActions();
+		list<Action>::const_iterator iterator;
+		for (iterator = actions.begin(); iterator != actions.end(); ++iterator) {
+			Action action = *iterator;
+			switch(action) {
+			case ADD:
+				actionAddAdapter(adapter);
+				break;
+			case DEL:
+				actionDeleteAdapter(adapter);
+				break;
+			case MOD:
+				actionModifyAdapter(adapter);
+				break;
+			case SHF:
+				actionShiftAdapter(adapter);
+				break;
+			}
+		}
+	}
+}
+
+void Player::actionAddRule(Rule *adapterRule){
 	bool addRule = true;
 	list<Rule*>::const_iterator iterator;
 	for (iterator = rules.begin(); iterator != rules.end(); ++iterator) {
@@ -151,7 +177,7 @@ void Player::actionAdd(Rule *adapterRule){
 	}
 }
 
-void Player::actionDelete(Rule *adapterRule){
+void Player::actionDeleteRule(Rule *adapterRule){
 	bool deleteRule = false;
 	list<Rule*>::const_iterator iterator;
 	for (iterator = rules.begin(); iterator != rules.end(); ++iterator) {
@@ -179,11 +205,77 @@ void Player::actionDelete(Rule *adapterRule){
 	}
 }
 
-void Player::actionModify(Rule *adapterRule){
+void Player::actionModifyRule(Rule *adapterRule){
 
 }
 
-void Player::actionShift(Rule *adapterRule){
+void Player::actionShiftRule(Rule *adapterRule){
+
+}
+
+void Player::actionAddAdapter(Adapter *adapter){
+	bool addAction = true;
+	list<Adapter*>::const_iterator iterator;
+	for (iterator = adapters.begin(); iterator != adapters.end(); ++iterator) {
+		Adapter *itrAdapter = *iterator;
+		RuleComparison comp = adapter->getRule()->compare(adapter->getRule());
+		switch(comp){
+		case GENERAL:
+			adapters.remove(itrAdapter);
+			adapters.push_back(adapter);
+			addAction = false;
+			break;
+		case SPECIFIC:
+			addAction = false;
+			break;
+		case EQUAL:
+			addAction = false;
+			break;
+		case NOT_EQUAL:
+			break;
+		}
+		if(!addAction){
+			break;
+		}
+	}
+	if(addAction){
+		adapters.push_back(adapter);
+	}
+}
+
+void Player::actionDeleteAdapter(Adapter *adapter){
+	bool deleteAdapter = false;
+	list<Adapter*>::const_iterator iterator;
+	for (iterator = adapters.begin(); iterator != adapters.end(); ++iterator) {
+		Adapter *itrAdapter = *iterator;
+		RuleComparison comp = itrAdapter->getRule()->compare(adapter->getRule());
+		switch(comp){
+		case GENERAL:
+			//Don't do anything
+			break;
+		case SPECIFIC:
+			deleteAdapter = true;
+			break;
+		case EQUAL:
+			deleteAdapter = true;
+			break;
+		case NOT_EQUAL:
+			break;
+		}
+		if(deleteAdapter){
+			break;
+		}
+	}
+	if(deleteAdapter){
+		adapters.remove(adapter);
+	}
+}
+
+void Player::actionModifyAdapter(Adapter *adapter){
+
+}
+
+void Player::actionShiftAdapter(Adapter *adapter){
 
 }
 

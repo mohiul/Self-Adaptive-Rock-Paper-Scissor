@@ -17,6 +17,10 @@ This is the standard root tag of the XML file.
   		<action>ADD</action>
   		<action>MOD</action>	
   	</adapter>
+    <adapter>
+  		<rule><![CDATA[0?11:R]]></rule>
+  		<action>DEL</action>
+  	</adapter>
   </player>
   <player name="P2"/>
 </root>

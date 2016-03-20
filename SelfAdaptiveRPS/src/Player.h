@@ -28,6 +28,7 @@ public:
 	void addRule(Rule* rule);
 	void addAdapter(Adapter* adapter);
 	void adapt();
+	void selfAdapt();
 	void printHistory();
 	void printHistory(list<char> history);
 	string getEntireHistoryStr();
@@ -50,10 +51,17 @@ protected:
 	list<char> history;
 	list<Rule*> rules;
 	list<Adapter*> adapters;
-	void actionAdd(Rule *adapterRule);
-	void actionDelete(Rule *adapterRule);
-	void actionModify(Rule *adapterRule);
-	void actionShift(Rule *adapterRule);
+
+	void actionAddRule(Rule *adapterRule);
+	void actionDeleteRule(Rule *adapterRule);
+	void actionModifyRule(Rule *adapterRule);
+	void actionShiftRule(Rule *adapterRule);
+
+	void actionAddAdapter(Adapter *adapter);
+	void actionDeleteAdapter(Adapter *adapter);
+	void actionModifyAdapter(Adapter *adapter);
+	void actionShiftAdapter(Adapter *adapter);
+
 private:
 
 };

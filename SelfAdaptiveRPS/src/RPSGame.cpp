@@ -108,6 +108,8 @@ void RPSGame::play(int noOfGame) {
 		player2->addHistory(p2Move, p1Move);
 		player1->adapt();
 		player2->adapt();
+//		player1->selfAdapt();
+//		player2->selfAdapt();
 		updateTextBoxes(p1Move, p2Move);
 	}
 	player1->printHistory();

@@ -15,17 +15,13 @@
 #include "SelfAdaptiveRPS.h"
 #include "Utils.h"
 
-RuleEngine::RuleEngine(string name) {
-	this->name = name;
-	winCount = 0;
-	looseCount = 0;
-	drawCount = 0;
+RuleEngine::RuleEngine(Player* player) {
+	this->player = player;
 	parser = new RuleParser(this);
 }
 
 RuleEngine::~RuleEngine() {
 	parser->~RuleParser();
-	history.clear();
 	for (list<Rule*>::const_iterator iterator = rules.begin();
 			iterator != rules.end();
 			++iterator) {
@@ -42,50 +38,6 @@ RuleEngine::~RuleEngine() {
 
 char RuleEngine::nextMove() {
 	return parser->nextMove();
-}
-
-void RuleEngine::addHistory(char ownMove, char opponentMove){
-	moveHistory.push_front(ownMove);
-	char gameResult = 0;
-	if(ownMove == 'R' && opponentMove == 'R'){
-		gameResult = '3';
-		drawCount++;
-		resultHistory.push_front('D');
-	} else if(ownMove == 'R' && opponentMove == 'P'){
-		gameResult = '0';
-		looseCount++;
-		resultHistory.push_front('L');
-	} else if(ownMove == 'R' && opponentMove == 'S'){
-		gameResult = '8';
-		winCount++;
-		resultHistory.push_front('W');
-	} else if(ownMove == 'P' && opponentMove == 'R'){
-		gameResult = '6';
-		winCount++;
-		resultHistory.push_front('W');
-	} else if(ownMove == 'P' && opponentMove == 'P'){
-		gameResult = '4';
-		drawCount++;
-		resultHistory.push_front('D');
-	} else if(ownMove == 'P' && opponentMove == 'S'){
-		gameResult = '1';
-		looseCount++;
-		resultHistory.push_front('L');
-	} else if(ownMove == 'S' && opponentMove == 'R'){
-		gameResult = '2';
-		looseCount++;
-		resultHistory.push_front('L');
-	} else if(ownMove == 'S' && opponentMove == 'P'){
-		gameResult = '7';
-		winCount++;
-		resultHistory.push_front('W');
-	} else if(ownMove == 'S' && opponentMove == 'S'){
-		gameResult = '5';
-		drawCount++;
-		resultHistory.push_front('D');
-	}
-	history.push_front(gameResult);
-
 }
 
 void RuleEngine::addRule(Rule* rule) {
@@ -280,75 +232,12 @@ void RuleEngine::actionShiftAdapter(Adapter *adapter){
 
 }
 
-string RuleEngine::getEntireHistoryStr(){
-	ostringstream oss;
-	list<char>::const_iterator iterator;
-	for (iterator = history.begin(); iterator != history.end(); ++iterator) {
-		oss << " " << *iterator;
-	}
-	oss << endl;
-
-	for (iterator = moveHistory.begin(); iterator != moveHistory.end(); ++iterator) {
-		oss << " " << *iterator;
-	}
-	oss << endl;
-	return oss.str();
-}
-
-string RuleEngine::getCurrentHistoryStr(bool flipStr){
-	ostringstream oss;
-	if(flipStr){
-		oss << moveHistory.front() << " " << history.front() << " " << resultHistory.front();
-	} else {
-		oss << resultHistory.front() << " " << history.front() << " " << moveHistory.front();
-	}
-	return oss.str();
-}
-
-void RuleEngine::printHistory(){
-	list<char>::const_iterator iterator;
-	cout << name << " history: ";
-	for (iterator = history.begin(); iterator != history.end(); ++iterator) {
-	    cout << " " << *iterator;
-	}
-	cout << endl;
-}
-
-void RuleEngine::printHistory(list<char> history){
-	list<char>::const_iterator iterator;
-	cout << name << " history: ";
-	for (iterator = history.begin(); iterator != history.end(); ++iterator) {
-	    cout << " " << *iterator;
-	}
-	cout << endl;
-}
-
 list<Rule*> RuleEngine::getRules(){
 	return rules;
 }
 
 list<Adapter*> RuleEngine::getAdapters(){
 	return adapters;
-}
-
-void RuleEngine::setName(string name){
-	this->name = name;
-}
-
-string RuleEngine::getName(){
-	return name;
-}
-
-int RuleEngine::getWin() {
-	return winCount;
-}
-
-int RuleEngine::getLoose() {
-	return looseCount;
-}
-
-int RuleEngine::getDraw() {
-	return drawCount;
 }
 
 /*

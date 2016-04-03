@@ -18,7 +18,7 @@ class RuleEngine;
 
 class RuleParser {
 protected:
-	RuleEngine *player;
+	RuleEngine *ruleEngine;
 	list<Rule*> matchRules(list<char> history);
 public:
 	RuleParser(RuleEngine *player);

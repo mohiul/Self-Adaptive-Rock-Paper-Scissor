@@ -11,44 +11,30 @@
 #include <iostream>
 #include <list>
 
+#include "Player.h"
 #include "Rule.h"
 #include "Adapter.h"
 #include "RuleParser.h"
 
 using namespace std;
 class RuleParser;
+class Player;
 
 class RuleEngine {
 	friend class RuleParser;
 public:
-	RuleEngine(string name);
+	RuleEngine(Player* player);
 	virtual ~RuleEngine();
 	char nextMove();
-	void addHistory(char ownMove, char opponentMove);
 	void addRule(Rule* rule);
 	void addAdapter(Adapter* adapter);
 	void adapt();
 	void selfAdapt();
-	void printHistory();
-	void printHistory(list<char> history);
-	string getEntireHistoryStr();
-	string getCurrentHistoryStr(bool flipStr);
-	string getName();
-	void setName(string name);
 	list<Rule*> getRules();
 	list<Adapter*> getAdapters();
-	int getWin();
-	int getLoose();
-	int getDraw();
 protected:
+	Player* player;
 	RuleParser *parser;
-	string name;
-	int winCount;
-	int looseCount;
-	int drawCount;
-	list<char> resultHistory;
-	list<char> moveHistory;
-	list<char> history;
 	list<Rule*> rules;
 	list<Adapter*> adapters;
 

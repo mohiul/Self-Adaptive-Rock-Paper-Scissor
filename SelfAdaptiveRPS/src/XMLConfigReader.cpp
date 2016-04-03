@@ -16,17 +16,17 @@ XMLConfigReader::~XMLConfigReader() {
 	// TODO Auto-generated destructor stub
 }
 
-void XMLConfigReader::getRulesFromXML(TiXmlElement* playerElm, RuleEngine *player) {
+void XMLConfigReader::getRulesFromXML(TiXmlElement* playerElm, Player *player) {
 	for (TiXmlElement* ruleElm = playerElm->FirstChildElement("rule");
 			ruleElm != NULL; ruleElm = ruleElm->NextSiblingElement("rule")) {
 		std::string rule = std::string(ruleElm->GetText());
 		int delimiterLoc = rule.find(":");
-		player->addRule(new Rule(rule.substr(0, delimiterLoc),
+		player->bestRuleEngine->addRule(new Rule(rule.substr(0, delimiterLoc),
 				rule.substr(delimiterLoc + 1, rule.length()).at(0)));
 	}
 }
 
-void XMLConfigReader::getAdaptersFromXML(TiXmlElement* playerElm, RuleEngine *player) {
+void XMLConfigReader::getAdaptersFromXML(TiXmlElement* playerElm, Player *player) {
 	for (TiXmlElement* adapterElm = playerElm->FirstChildElement("adapter");
 			adapterElm != NULL; adapterElm = adapterElm->NextSiblingElement("adapter")) {
 		TiXmlElement* conditionElm = adapterElm->FirstChildElement("rule");
@@ -50,7 +50,7 @@ void XMLConfigReader::getAdaptersFromXML(TiXmlElement* playerElm, RuleEngine *pl
 					std::cerr << "Action: " << actionTxt << " not defined!!" << std::endl;
 				}
 			}
-			player->addAdapter(adapter);
+			player->bestRuleEngine->addAdapter(adapter);
 		}
 	}
 }
@@ -69,13 +69,15 @@ bool XMLConfigReader::readConfigFile(std::string configFile)
 	{
 		TiXmlElement* playerElm = root->FirstChildElement("player");
 		if(playerElm != NULL){
-			rpsGame->player1 = new RuleEngine(playerElm->Attribute("name"));
+			rpsGame->player1 = new Player();
+			rpsGame->player1->setName(playerElm->Attribute("name"));
 			getRulesFromXML(playerElm, rpsGame->player1);
 			getAdaptersFromXML(playerElm, rpsGame->player1);
 
 			playerElm = playerElm->NextSiblingElement("player");
 			if(playerElm != NULL){
-				rpsGame->player2 = new RuleEngine(playerElm->Attribute("name"));
+				rpsGame->player2 = new Player();
+				rpsGame->player2->setName(playerElm->Attribute("name"));
 				getRulesFromXML(playerElm, rpsGame->player2);
 				getAdaptersFromXML(playerElm, rpsGame->player2);
 			} else {

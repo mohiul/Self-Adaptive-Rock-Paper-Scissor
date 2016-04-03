@@ -16,7 +16,7 @@
 #include "Utils.h"
 
 RuleParser::RuleParser(RuleEngine *player) {
-	this->player = player;
+	this->ruleEngine = player;
 
 }
 
@@ -28,7 +28,7 @@ list<Rule*> RuleParser::matchRules(list<char> history) {
 	list<Rule*> matchedRules;
 	if (history.size() > 0) {
 		list<Rule*>::const_iterator iterator;
-		for (iterator = player->rules.begin(); iterator != player->rules.end(); ++iterator) {
+		for (iterator = ruleEngine->rules.begin(); iterator != ruleEngine->rules.end(); ++iterator) {
 			Rule* rule = *iterator;
 			string expr = rule->getCondition();
 			//cout << "expr: " << expr << endl;
@@ -91,7 +91,7 @@ struct CompareRuleHowRecent {
 
 char RuleParser::nextMove() {
 	char moveToReturn = 0;
-	string historyStr(Utils::convertListToArray(player->history));
+	string historyStr(Utils::convertListToArray(ruleEngine->player->getHistory()));
 	int strLength = historyStr.length();
 	list<Rule*> matchedRules;
 	for(int i = 0; i < strLength; i++){
@@ -141,9 +141,9 @@ char RuleParser::nextRandomMove() {
 
 void RuleParser::printRuleList(list<Rule*> ruleList){
 	list<Rule*>::const_iterator iterator;
-	cout << player->name << " rule list begin: " << endl;
+	cout << ruleEngine->player->getName() << " rule list begin: " << endl;
 	for (iterator = ruleList.begin(); iterator != ruleList.end(); ++iterator) {
 		cout << (*iterator)->getDetailString() << endl;
 	}
-	cout << player->name << " rule list end: " << endl;
+	cout << ruleEngine->player->getName() << " rule list end: " << endl;
 }

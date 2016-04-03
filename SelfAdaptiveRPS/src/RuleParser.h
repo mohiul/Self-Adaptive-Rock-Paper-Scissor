@@ -9,19 +9,19 @@
 #define RULEPARSER_H_
 
 #include <list>
-#include "Player.h"
 #include "Rule.h"
+#include "RuleEngine.h"
 #include "Utils.h"
 
 using namespace std;
-class Player;
+class RuleEngine;
 
 class RuleParser {
 protected:
-	Player *player;
+	RuleEngine *player;
 	list<Rule*> matchRules(list<char> history);
 public:
-	RuleParser(Player *player);
+	RuleParser(RuleEngine *player);
 	virtual ~RuleParser();
 	char nextMove();
 	char nextRandomMove();

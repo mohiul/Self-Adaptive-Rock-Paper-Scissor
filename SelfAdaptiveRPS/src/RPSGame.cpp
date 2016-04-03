@@ -28,8 +28,8 @@ RPSGame::RPSGame(std::string configFile) {
 }
 
 RPSGame::~RPSGame() {
-	player1->~Player();
-	player2->~Player();
+	player1->~RuleEngine();
+	player2->~RuleEngine();
 	xmlConfigReader->~XMLConfigReader();
 }
 
@@ -116,7 +116,7 @@ void RPSGame::play(int noOfGame) {
 	player2->printHistory();
 }
 
-std::string RPSGame::printRules(Player *player) {
+std::string RPSGame::printRules(RuleEngine *player) {
     std::ostringstream oss;
 	std::list<Rule*> rules = player->getRules();
 	oss << "Player "<< player->getName() << " rules:\n";
@@ -130,7 +130,7 @@ std::string RPSGame::printRules(Player *player) {
 	return oss.str();
 }
 
-std::string RPSGame::printAdapters(Player *player) {
+std::string RPSGame::printAdapters(RuleEngine *player) {
     std::ostringstream oss;
 	std::list<Adapter*> adapters = player->getAdapters();
 	oss << "Player "<< player->getName() << " adapters:\n";

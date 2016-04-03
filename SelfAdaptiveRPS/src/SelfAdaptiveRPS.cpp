@@ -147,7 +147,7 @@ int main(int argc, char** argv)
     initFile = glui->add_edittext_to_panel(controlPanel, "Rule Init File ", GLUI_EDITTEXT_TEXT);
     initFile->set_w(150);
     initFile->enable();
-    initFile->set_text("/home/mohiul/workspace-cpp/self-adaptive-rps-code/SelfAdaptiveRPS/initialconfig.xml");
+    initFile->set_text("initialconfig.xml");
     iterationSpnr = new GLUI_Spinner( controlPanel, "Iterations:", &iterations);
     iterationSpnr->set_int_limits( 10, 10000 );
 

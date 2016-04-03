@@ -11,8 +11,8 @@
 #include <iostream>
 #include <list>
 
+#include "RuleEngine.h"
 #include "SelfAdaptiveRPS.h"
-#include "Player.h"
 #include "XMLConfigReader.h"
 
 class XMLConfigReader;
@@ -24,12 +24,12 @@ public:
 	virtual ~RPSGame();
 	void play(int noOfGame);
 	void playOneMove(Move move);
-	std::string printRules(Player *player);
-	std::string printAdapters(Player *player);
+	std::string printRules(RuleEngine *player);
+	std::string printAdapters(RuleEngine *player);
 	void printResult();
 protected:
-	Player *player1;
-	Player *player2;
+	RuleEngine *player1;
+	RuleEngine *player2;
 	static int gameNo;
 	int gameIteration;
 	std::string resultBoxText;

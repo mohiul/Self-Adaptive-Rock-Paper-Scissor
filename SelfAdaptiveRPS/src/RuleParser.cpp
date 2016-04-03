@@ -15,7 +15,7 @@
 #include "RPSGame.h"
 #include "Utils.h"
 
-RuleParser::RuleParser(Player *player) {
+RuleParser::RuleParser(RuleEngine *player) {
 	this->player = player;
 
 }

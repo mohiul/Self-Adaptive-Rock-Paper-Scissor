@@ -102,6 +102,10 @@ void RPSGame::playOneMove(Move move) {
 void RPSGame::play(int noOfGame) {
 
 	for(gameIteration = 0; gameIteration < noOfGame; gameIteration++){
+		if(gameIteration % 5){
+			player1->evolve();
+			player2->evolve();
+		}
 		char p1Move = player1->nextMove();
 		char p2Move = player2->nextMove();
 		player1->addHistory(p1Move, p2Move);

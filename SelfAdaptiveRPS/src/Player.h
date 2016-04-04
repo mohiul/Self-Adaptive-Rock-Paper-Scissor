@@ -13,9 +13,11 @@
 #include "RuleEngine.h"
 #include "Rule.h"
 #include "Adapter.h"
+#include "Evolution.h"
 
 using namespace std;
 class RuleEngine;
+class Evolution;
 
 class Player {
 protected:
@@ -27,6 +29,7 @@ protected:
 	list<char> moveHistory;
 	list<char> history;
 	list<RuleEngine*> ruleEngines;
+	Evolution* evolution;
 public:
 	RuleEngine* bestRuleEngine;
 	Player();
@@ -47,6 +50,7 @@ public:
 	const list<char>& getHistory() const;
 	void addRuleEngine(RuleEngine* engine);
 	RuleEngine* getBestRuleEngine();
+	void evolve();
 };
 
 #endif /* PLAYER_H_ */

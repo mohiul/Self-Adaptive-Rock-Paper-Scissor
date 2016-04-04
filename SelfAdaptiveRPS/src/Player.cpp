@@ -16,10 +16,22 @@ Player::Player() {
 	winCount = 0;
 	looseCount = 0;
 	drawCount = 0;
+	evolution = new Evolution();
 }
 
 Player::~Player() {
 	history.clear();
+}
+
+void Player::evolve() {
+	if(ruleEngines.size() > 1){
+		list<RuleEngine*> childrenList = evolution->evolve(ruleEngines);
+		ruleEngines.clear();
+		list<RuleEngine*>::const_iterator iterator;
+		for (iterator = childrenList.begin(); iterator != childrenList.end(); ++iterator) {
+			ruleEngines.push_back(*iterator);
+		}
+	}
 }
 
 char Player::nextMove() {

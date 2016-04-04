@@ -296,6 +296,10 @@ float RuleEngine::getFitness(){
 	return fitness;
 }
 
+Player* RuleEngine::getPlayer(){
+	return player;
+}
+
 /*
 int main(int argc, char** argv)
 {

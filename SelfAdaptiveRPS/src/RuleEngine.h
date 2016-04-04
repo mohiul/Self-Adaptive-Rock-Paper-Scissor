@@ -37,6 +37,7 @@ public:
 	list<char> getMoveHistory();
 	float calculateFitness();
 	float getFitness();
+	Player* getPlayer();
 
 protected:
 	Player* player;

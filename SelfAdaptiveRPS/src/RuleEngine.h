@@ -32,11 +32,21 @@ public:
 	void selfAdapt();
 	list<Rule*> getRules();
 	list<Adapter*> getAdapters();
+	void addHistory(char opponentMove);
+	list<char> getResultHistory();
+	list<char> getMoveHistory();
+	float calculateFitness();
+	float getFitness();
+
 protected:
 	Player* player;
 	RuleParser *parser;
 	list<Rule*> rules;
 	list<Adapter*> adapters;
+	list<char> resultHistory;
+	list<char> moveHistory;
+	float fitness;
+	float learningFactor;
 
 	void actionAddRule(Rule *adapterRule);
 	void actionDeleteRule(Rule *adapterRule);

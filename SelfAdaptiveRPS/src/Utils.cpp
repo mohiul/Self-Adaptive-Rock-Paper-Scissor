@@ -42,7 +42,7 @@ char *Utils::convertListToArray(std::list<char> listToConvert){
 
 std::list<char> Utils::convertStrToList(std::string strToConvert){
 	std::list<char> charList;
-	for(int i = 0; i < strToConvert.length(); i++){
+	for(unsigned int i = 0; i < strToConvert.length(); i++){
 		charList.push_back(strToConvert.at(i));
 	}
 	return charList;

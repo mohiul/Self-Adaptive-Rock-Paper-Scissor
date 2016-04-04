@@ -6,15 +6,16 @@
  */
 
 #include <sstream>
+#include <algorithm>
 
 #include "Player.h"
 
 Player::Player() {
+	bestRuleEngine = NULL;
 	this->name = name;
 	winCount = 0;
 	looseCount = 0;
 	drawCount = 0;
-	bestRuleEngine = new RuleEngine(this);
 }
 
 Player::~Player() {
@@ -22,7 +23,38 @@ Player::~Player() {
 }
 
 char Player::nextMove() {
+	bestRuleEngine = getBestRuleEngine();
 	return bestRuleEngine->nextMove();
+}
+
+bool compare_ruleEngine (RuleEngine* first, RuleEngine* second)
+{
+  return ( first->getFitness() > second->getFitness() );
+}
+
+RuleEngine* Player::getBestRuleEngine(){
+
+	ruleEngines.sort(compare_ruleEngine);
+
+	list<RuleEngine*> bestFitnessEngines;
+	float bestFitness = ruleEngines.front()->getFitness();
+//	cout << name << ": current best fitness: " << bestFitness << endl;
+	list<RuleEngine*>::const_iterator iterator;
+	for (iterator = ruleEngines.begin(); iterator != ruleEngines.end(); ++iterator) {
+		RuleEngine* engine = *iterator;
+//		cout << name << ": engine->getFitness(): " << engine->getFitness() << endl;
+		if(engine->getFitness() == bestFitness){
+			bestFitnessEngines.push_back(engine);
+		}
+	}
+	int randomFitnessEngine = 0;
+	if(bestFitnessEngines.size() > 1){
+		randomFitnessEngine = rand() % bestFitnessEngines.size();
+	}
+//	cout << name << ": randomFitnessEngine: " << randomFitnessEngine << endl;
+	iterator = bestFitnessEngines.begin();
+	advance(iterator, randomFitnessEngine);
+	return *iterator;
 }
 
 void Player::setName(string name){
@@ -49,11 +81,18 @@ const list<char>& Player::getHistory() const {
 	return history;
 }
 
-void Player::setHistory(const list<char>& history) {
-	this->history = history;
+void Player::addRuleEngine(RuleEngine* engine) {
+	return ruleEngines.push_back(engine);
 }
 
 void Player::addHistory(char ownMove, char opponentMove){
+	//Update rule engine history
+	list<RuleEngine*>::const_iterator iterator;
+	for (iterator = ruleEngines.begin(); iterator != ruleEngines.end(); ++iterator) {
+		RuleEngine* engine = *iterator;
+		engine->addHistory(opponentMove);
+	}
+
 	moveHistory.push_front(ownMove);
 	char gameResult = 0;
 	if(ownMove == 'R' && opponentMove == 'R'){

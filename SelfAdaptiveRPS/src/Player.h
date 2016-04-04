@@ -26,7 +26,7 @@ protected:
 	list<char> resultHistory;
 	list<char> moveHistory;
 	list<char> history;
-
+	list<RuleEngine*> ruleEngines;
 public:
 	RuleEngine* bestRuleEngine;
 	Player();
@@ -45,7 +45,8 @@ public:
 	list<Adapter*> getAdapters();
 	char nextMove();
 	const list<char>& getHistory() const;
-	void setHistory(const list<char>& history);
+	void addRuleEngine(RuleEngine* engine);
+	RuleEngine* getBestRuleEngine();
 };
 
 #endif /* PLAYER_H_ */

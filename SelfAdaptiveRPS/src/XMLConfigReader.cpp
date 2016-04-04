@@ -16,18 +16,33 @@ XMLConfigReader::~XMLConfigReader() {
 	// TODO Auto-generated destructor stub
 }
 
-void XMLConfigReader::getRulesFromXML(TiXmlElement* playerElm, Player *player) {
-	for (TiXmlElement* ruleElm = playerElm->FirstChildElement("rule");
+void XMLConfigReader::getRuleEnginesFromXML(TiXmlElement* playerElm, Player *player) {
+	int noOfRuleEngine = 0;
+	for (TiXmlElement* ruleEngineElm = playerElm->FirstChildElement("ruleengine");
+			ruleEngineElm != NULL; ruleEngineElm = ruleEngineElm->NextSiblingElement("ruleengine")) {
+		noOfRuleEngine++;
+		RuleEngine* engine = new RuleEngine(player);
+		player->addRuleEngine(engine);
+		getRulesFromXML(ruleEngineElm, engine);
+		getAdaptersFromXML(ruleEngineElm, engine);
+	}
+	if(noOfRuleEngine == 0){
+		player->addRuleEngine(new RuleEngine(player));
+	}
+}
+
+void XMLConfigReader::getRulesFromXML(TiXmlElement* ruleEngineElm, RuleEngine* engine) {
+	for (TiXmlElement* ruleElm = ruleEngineElm->FirstChildElement("rule");
 			ruleElm != NULL; ruleElm = ruleElm->NextSiblingElement("rule")) {
 		std::string rule = std::string(ruleElm->GetText());
 		int delimiterLoc = rule.find(":");
-		player->bestRuleEngine->addRule(new Rule(rule.substr(0, delimiterLoc),
+		engine->addRule(new Rule(rule.substr(0, delimiterLoc),
 				rule.substr(delimiterLoc + 1, rule.length()).at(0)));
 	}
 }
 
-void XMLConfigReader::getAdaptersFromXML(TiXmlElement* playerElm, Player *player) {
-	for (TiXmlElement* adapterElm = playerElm->FirstChildElement("adapter");
+void XMLConfigReader::getAdaptersFromXML(TiXmlElement* ruleEngineElm, RuleEngine *engine) {
+	for (TiXmlElement* adapterElm = ruleEngineElm->FirstChildElement("adapter");
 			adapterElm != NULL; adapterElm = adapterElm->NextSiblingElement("adapter")) {
 		TiXmlElement* conditionElm = adapterElm->FirstChildElement("rule");
 		if(conditionElm != NULL){
@@ -50,7 +65,7 @@ void XMLConfigReader::getAdaptersFromXML(TiXmlElement* playerElm, Player *player
 					std::cerr << "Action: " << actionTxt << " not defined!!" << std::endl;
 				}
 			}
-			player->bestRuleEngine->addAdapter(adapter);
+			engine->addAdapter(adapter);
 		}
 	}
 }
@@ -71,15 +86,13 @@ bool XMLConfigReader::readConfigFile(std::string configFile)
 		if(playerElm != NULL){
 			rpsGame->player1 = new Player();
 			rpsGame->player1->setName(playerElm->Attribute("name"));
-			getRulesFromXML(playerElm, rpsGame->player1);
-			getAdaptersFromXML(playerElm, rpsGame->player1);
+			getRuleEnginesFromXML(playerElm, rpsGame->player1);
 
 			playerElm = playerElm->NextSiblingElement("player");
 			if(playerElm != NULL){
 				rpsGame->player2 = new Player();
 				rpsGame->player2->setName(playerElm->Attribute("name"));
-				getRulesFromXML(playerElm, rpsGame->player2);
-				getAdaptersFromXML(playerElm, rpsGame->player2);
+				getRuleEnginesFromXML(playerElm, rpsGame->player2);
 			} else {
 				std::cerr << "second player not found!!" << std::endl;
 			}

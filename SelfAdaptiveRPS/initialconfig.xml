@@ -7,20 +7,29 @@ This is the standard root tag of the XML file.
 
 <root>
   <player name="P1">
-  	<rule><![CDATA[0?21:R]]></rule>
-  	<rule><![CDATA[0?11:R]]></rule>
-	<rule><![CDATA[1?12:P]]></rule>
-	<rule><![CDATA[2?13:S]]></rule>
-	<rule><![CDATA[123?13:R]]></rule>
-  	<adapter>
-  		<rule><![CDATA[0?11:R]]></rule>
-  		<action>ADD</action>
-  		<action>MOD</action>	
-  	</adapter>
-    <adapter>
-  		<rule><![CDATA[0?11:R]]></rule>
-  		<action>DEL</action>
-  	</adapter>
+  	<ruleengine>
+	  	<rule><![CDATA[0?21:R]]></rule>
+	  	<rule><![CDATA[0?11:R]]></rule>
+		<rule><![CDATA[1?12:P]]></rule>
+		<rule><![CDATA[2?13:S]]></rule>
+		<rule><![CDATA[123?13:R]]></rule>
+	  	<adapter>
+	  		<rule><![CDATA[0?11:R]]></rule>
+	  		<action>ADD</action>
+	  		<action>MOD</action>	
+	  	</adapter>
+	    <adapter>
+	  		<rule><![CDATA[0?11:R]]></rule>
+	  		<action>DEL</action>
+	  	</adapter>
+  	</ruleengine>
+  	<ruleengine>
+	  	<rule><![CDATA[10?21:R]]></rule>
+	  	<rule><![CDATA[20?11:R]]></rule>
+		<rule><![CDATA[31?12:P]]></rule>
+		<rule><![CDATA[42?13:S]]></rule>
+		<rule><![CDATA[5123?13:R]]></rule>
+  	</ruleengine>
   </player>
   <player name="P2"/>
 </root>

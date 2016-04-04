@@ -16,8 +16,9 @@ class RPSGame;
 class XMLConfigReader {
 protected:
 	RPSGame *rpsGame;
-	void getRulesFromXML(TiXmlElement* playerElm, Player *player);
-	void getAdaptersFromXML(TiXmlElement* playerElm, Player *player);
+	void getRuleEnginesFromXML(TiXmlElement* playerElm, Player *player);
+	void getRulesFromXML(TiXmlElement* playerElm, RuleEngine* engine);
+	void getAdaptersFromXML(TiXmlElement* playerElm, RuleEngine* engine);
 public:
 	XMLConfigReader(RPSGame *rpsGame);
 	virtual ~XMLConfigReader();

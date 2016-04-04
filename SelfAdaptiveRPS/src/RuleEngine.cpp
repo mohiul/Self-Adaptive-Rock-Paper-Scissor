@@ -18,6 +18,8 @@
 RuleEngine::RuleEngine(Player* player) {
 	this->player = player;
 	parser = new RuleParser(this);
+	fitness = 0;
+	learningFactor = 0.5;
 }
 
 RuleEngine::~RuleEngine() {
@@ -36,8 +38,50 @@ RuleEngine::~RuleEngine() {
 	adapters.clear();
 }
 
+void RuleEngine::addHistory(char opponentMove){
+	char ownMove = moveHistory.front();
+	if(ownMove == 'R' && opponentMove == 'R'){
+		resultHistory.push_front('D');
+	} else if(ownMove == 'R' && opponentMove == 'P'){
+		resultHistory.push_front('L');
+	} else if(ownMove == 'R' && opponentMove == 'S'){
+		resultHistory.push_front('W');
+	} else if(ownMove == 'P' && opponentMove == 'R'){
+		resultHistory.push_front('W');
+	} else if(ownMove == 'P' && opponentMove == 'P'){
+		resultHistory.push_front('D');
+	} else if(ownMove == 'P' && opponentMove == 'S'){
+		resultHistory.push_front('L');
+	} else if(ownMove == 'S' && opponentMove == 'R'){
+		resultHistory.push_front('L');
+	} else if(ownMove == 'S' && opponentMove == 'P'){
+		resultHistory.push_front('W');
+	} else if(ownMove == 'S' && opponentMove == 'S'){
+		resultHistory.push_front('D');
+	}
+	calculateFitness();
+}
+
+float RuleEngine::calculateFitness() {
+	char result = resultHistory.front();
+	switch(result){
+	case 'W':
+		fitness = (1 - learningFactor)*fitness + learningFactor * 1;
+		break;
+	case 'D':
+		fitness = (1 - learningFactor)*fitness + learningFactor * 0;
+		break;
+	case 'L':
+		fitness = (1 - learningFactor)*fitness + learningFactor * (-1);
+		break;
+	}
+	return fitness;
+}
+
 char RuleEngine::nextMove() {
-	return parser->nextMove();
+	char nextMove = parser->nextMove();
+	moveHistory.push_front(nextMove);
+	return nextMove;
 }
 
 void RuleEngine::addRule(Rule* rule) {
@@ -238,6 +282,18 @@ list<Rule*> RuleEngine::getRules(){
 
 list<Adapter*> RuleEngine::getAdapters(){
 	return adapters;
+}
+
+list<char> RuleEngine::getResultHistory(){
+	return resultHistory;
+}
+
+list<char> RuleEngine::getMoveHistory(){
+	return moveHistory;
+}
+
+float RuleEngine::getFitness(){
+	return fitness;
 }
 
 /*

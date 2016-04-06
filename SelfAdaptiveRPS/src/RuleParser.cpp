@@ -74,7 +74,7 @@ list<Rule*> RuleParser::matchRules(list<char> history) {
 
 			if (match) {
 				matchedRules.push_back(rule);
-				cout << "Rule matched: " << rule->getString() << endl;
+//				cout << "Rule matched: " << rule->getString() << endl;
 			}
 		}
 	}
@@ -116,7 +116,7 @@ char RuleParser::nextMove() {
 		matchedRules.sort(CompareRuleSpecificity());
 //		player->printRuleList(matchedRules);
 		Rule *rule = matchedRules.front();
-		cout << "Using Rule : " << rule->getDetailString() << endl;
+//		cout << "Using Rule : " << rule->getDetailString() << endl;
 		moveToReturn = rule->getAction();
 	}
 	return moveToReturn;

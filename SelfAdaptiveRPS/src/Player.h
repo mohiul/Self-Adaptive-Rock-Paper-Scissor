@@ -55,6 +55,7 @@ public:
 	RuleEngine* getBestRuleEngine();
 	void evolve();
 	float getFitness();
+	float getAvgFitness();
 };
 
 #endif /* PLAYER_H_ */

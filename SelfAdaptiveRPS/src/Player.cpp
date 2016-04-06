@@ -18,7 +18,7 @@ Player::Player() {
 	drawCount = 0;
 	evolution = new Evolution();
 	fitness = 0;
-	learningFactor = 0.5;
+	learningFactor = 0.1;
 }
 
 Player::~Player() {
@@ -181,6 +181,15 @@ float Player::calculateFitness() {
 
 float Player::getFitness(){
 	return fitness;
+}
+
+float Player::getAvgFitness(){
+	float totalFitness = 0;
+	list<RuleEngine*>::const_iterator iterator;
+	for (iterator = ruleEngines.begin(); iterator != ruleEngines.end(); ++iterator) {
+		totalFitness += (*iterator)->getFitness();
+	}
+	return totalFitness/ruleEngines.size();
 }
 
 list<Rule*> Player::getRules(){

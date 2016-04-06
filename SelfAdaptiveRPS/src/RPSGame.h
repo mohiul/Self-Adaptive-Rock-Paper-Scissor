@@ -38,6 +38,7 @@ protected:
 	std::string resultBoxText;
 	std::string historyBoxText;
 	ofstream fitnessFile;
+	ofstream avgFitnessFile;
 private:
 //	XMLConfigReader *xmlConfigReader;
 	void updateTextBoxes(char p1Move, char p2Move);

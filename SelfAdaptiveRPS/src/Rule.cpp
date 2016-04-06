@@ -8,6 +8,7 @@
 #include <sstream>
 #include <list>
 #include <utility>
+#include <cstdlib>
 #include "Rule.h"
 #include "SelfAdaptiveRPS.h"
 #include "Utils.h"
@@ -310,6 +311,81 @@ RuleComparison Rule::compare(Rule *rule){
 	}
 	return comp;
 }
+
+Rule* Rule::generateRule() {
+	stringstream ss;
+	int randNum;
+	int newRandNum;
+	char action;
+	int ruleSize = rand() % 9 + 1;
+	for(int i = 0; i < ruleSize; i++){
+		randNum = rand() % 12;
+		switch(randNum){
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+		case 6:
+		case 7:
+		case 8:
+			ss << randNum;
+			break;
+		case 9:
+			ss << '?';
+			newRandNum = rand() % 8 + 1;
+			ss << newRandNum;
+			i++;
+			break;
+		case 10:
+			ss << '>';
+			newRandNum = rand() % 8 + 1;
+			ss << newRandNum;
+			i++;
+			break;
+		case 11:
+			ss << '<';
+			newRandNum = rand() % 8 + 1;
+			ss << newRandNum;
+			i++;
+			break;
+		}
+	}
+	randNum = rand() % 9;
+	ss << randNum;
+	randNum = rand() % 3;
+	switch(randNum){
+	case 0:
+		action = 'R';
+		break;
+	case 1:
+		action = 'P';
+		break;
+	case 2:
+		action = 'S';
+		break;
+	}
+	return new Rule(ss.str(), action);
+}
+
+Rule* Rule::mutate() {
+	int randNum = rand() % condition.length();
+	stringstream ss;
+	char ch = '0' + rand() % 9;
+	ss << ch;
+	condition.replace(randNum, 1, ss.str());
+	return this;
+}
+
+/*
+int main() {
+	Rule* rule = Rule::generateRule();
+	cout << rule->getDetailString() << endl;
+	rule->mutate();
+	cout << rule->getDetailString() << endl;
+}
+*/
 
 /*
 int main() {

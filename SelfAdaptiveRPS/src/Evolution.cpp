@@ -5,9 +5,12 @@
  *      Author: mohiul
  */
 #include <utility>
+#include <sstream>
 #include <cstdlib>
+#include <list>
 
 #include "Evolution.h"
+#include "Rule.h"
 
 Evolution::Evolution() {
 	// TODO Auto-generated constructor stub
@@ -37,10 +40,12 @@ list<RuleEngine*> Evolution::evolve(list<RuleEngine*> parentList) {
 pair<RuleEngine*, RuleEngine*> Evolution::crossover(RuleEngine* engine1, RuleEngine* engine2) {
 	RuleEngine* child1 = new RuleEngine(engine1->getPlayer());
 	RuleEngine* child2 = new RuleEngine(engine1->getPlayer());
-	list<Rule*> ruleList1 = engine1->getRules();
-	list<Rule*> ruleList2 = engine1->getRules();
-	int rand1 = rand() % (ruleList1.size() - 1) + 1;
-	int rand2 = rand() % (ruleList2.size() - 1) + 1;
+	list<Rule*> ruleList1 = *(engine1->getRules());
+	list<Rule*> ruleList2 = *(engine1->getRules());
+//	int rand1 = rand() % (ruleList1.size() - 1) + 1;
+//	int rand2 = rand() % (ruleList2.size() - 1) + 1;
+	int rand1 = ruleList1.size()/2;
+	int rand2 = ruleList2.size()/2;
 	list<Rule*>::const_iterator iterator;
 	int i = 0;
 	for (iterator = ruleList1.begin(); iterator != ruleList1.end(); ++iterator, i++) {
@@ -62,6 +67,33 @@ pair<RuleEngine*, RuleEngine*> Evolution::crossover(RuleEngine* engine1, RuleEng
 }
 
 RuleEngine* Evolution::mutate(RuleEngine* engine) {
+	Rule* ruleToInsert;
+	list<Rule*>* ruleList = engine->getRules();
+	int listSize = ruleList->size();
+	int randNum = rand() % ruleList->size();
+	list<Rule*>::iterator iterator = ruleList->begin();
+	advance(iterator, randNum);
+
+	if(listSize > 1){
+		randNum = rand() % 3;
+	} else {
+		randNum = rand() % 2;
+	}
+	switch(randNum) {
+	case 0://ADD
+//		cout << "Adding rule..." << endl;
+		ruleToInsert = Rule::generateRule();
+		ruleList->insert(iterator, ruleToInsert);
+		break;
+	case 1://MODIFY
+//		cout << "Modifying rule..." << endl;
+		(*iterator)->mutate();
+		break;
+	case 2://DELETE
+//		cout << "Deleting rule..." << endl;
+		ruleList->remove(*iterator);
+		break;
+	}
 
 	return engine;
 }

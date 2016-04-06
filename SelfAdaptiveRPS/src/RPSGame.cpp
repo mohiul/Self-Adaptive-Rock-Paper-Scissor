@@ -19,18 +19,22 @@ RPSGame::RPSGame(std::string configFile) {
 	player2 = NULL;
 	gameIteration = 0;
 	gameNo++;
-	xmlConfigReader = new XMLConfigReader(this);
-	xmlConfigReader->readConfigFile(configFile);
+//	xmlConfigReader = new XMLConfigReader(this);
+//	xmlConfigReader->readConfigFile(configFile);
+	initPlayers();
 	if(radioSelection == PLAY){
 		player2->setName("U");
 	}
 	resultBoxText = resultTextBox->get_text();
+
+	fitnessFile.open ("fitness.txt");
 }
 
 RPSGame::~RPSGame() {
 	player1->~Player();
 	player2->~Player();
-	xmlConfigReader->~XMLConfigReader();
+//	xmlConfigReader->~XMLConfigReader();
+	fitnessFile.close();
 }
 
 void RPSGame::updateTextBoxes(char p1Move, char p2Move) {
@@ -115,9 +119,13 @@ void RPSGame::play(int noOfGame) {
 //		player1->selfAdapt();
 //		player2->selfAdapt();
 		updateTextBoxes(p1Move, p2Move);
+		cout << player1->getName() << ": Fitness: " << player1->getFitness() << endl;
+		cout << player2->getName() << ": Fitness: " << player2->getFitness() << endl;
+		fitnessFile << gameIteration << ", " << player1->getFitness() << ", " << player2->getFitness() << endl;
 	}
 	player1->printHistory();
 	player2->printHistory();
+
 }
 
 std::string RPSGame::printRules(Player *player) {
@@ -165,4 +173,32 @@ void RPSGame::printResult() {
 	std::string result = oss.str();
 	resultTextBox->set_text(result.c_str());
 	std::cout << result;
+}
+
+void RPSGame::initPlayers() {
+	player1 = initRandomPlayer("P1");
+	player2 = initRandomPlayer("P2");
+
+//	player2 = new Player();
+//	player2->setName("P2");
+//	RuleEngine* engine = new RuleEngine(player1);
+//	player2->addRuleEngine(engine);
+}
+
+Player* RPSGame::initRandomPlayer(string name) {
+	Player* player = new Player();
+	player->setName(name);
+
+	int noOfRuleEngine = 100;
+	for(int i = 0; i < noOfRuleEngine; i++){
+		RuleEngine* engine = new RuleEngine(player);
+		int noOfRules = 50;
+		noOfRules = rand() % noOfRules + 1;
+
+		for(int i = 0; i < noOfRules; i++){
+			engine->addRule(Rule::generateRule());
+		}
+		player->addRuleEngine(engine);
+	}
+	return player;
 }

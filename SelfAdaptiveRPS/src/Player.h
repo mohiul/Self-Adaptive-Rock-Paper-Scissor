@@ -30,6 +30,9 @@ protected:
 	list<char> history;
 	list<RuleEngine*> ruleEngines;
 	Evolution* evolution;
+	float fitness;
+	float learningFactor;
+	float calculateFitness();
 public:
 	RuleEngine* bestRuleEngine;
 	Player();
@@ -51,6 +54,7 @@ public:
 	void addRuleEngine(RuleEngine* engine);
 	RuleEngine* getBestRuleEngine();
 	void evolve();
+	float getFitness();
 };
 
 #endif /* PLAYER_H_ */

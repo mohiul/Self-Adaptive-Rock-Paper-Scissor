@@ -276,8 +276,8 @@ void RuleEngine::actionShiftAdapter(Adapter *adapter){
 
 }
 
-list<Rule*> RuleEngine::getRules(){
-	return rules;
+list<Rule*>* RuleEngine::getRules(){
+	return &rules;
 }
 
 list<Adapter*> RuleEngine::getAdapters(){

@@ -38,6 +38,8 @@ public:
 	void setHowRecent(int howRecent);
 	int getHowRecent();
 	RuleComparison compare(Rule *rule);
+	static Rule* generateRule();
+	Rule* mutate();
 protected:
 };
 

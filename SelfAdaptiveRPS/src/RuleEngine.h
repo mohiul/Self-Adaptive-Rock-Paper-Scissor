@@ -30,7 +30,7 @@ public:
 	void addAdapter(Adapter* adapter);
 	void adapt();
 	void selfAdapt();
-	list<Rule*> getRules();
+	list<Rule*> *getRules();
 	list<Adapter*> getAdapters();
 	void addHistory(char opponentMove);
 	list<char> getResultHistory();

@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <list>
+#include <fstream>
 
 #include "Player.h"
 #include "SelfAdaptiveRPS.h"
@@ -27,6 +28,8 @@ public:
 	std::string printRules(Player *player);
 	std::string printAdapters(Player *player);
 	void printResult();
+	void initPlayers();
+	Player* initRandomPlayer(string name);
 protected:
 	Player *player1;
 	Player *player2;
@@ -34,8 +37,9 @@ protected:
 	int gameIteration;
 	std::string resultBoxText;
 	std::string historyBoxText;
+	ofstream fitnessFile;
 private:
-	XMLConfigReader *xmlConfigReader;
+//	XMLConfigReader *xmlConfigReader;
 	void updateTextBoxes(char p1Move, char p2Move);
 	char getMoveFromEnum(Move move);
 };

@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <cstdlib>
 #include "Utils.h"
 
 Utils::Utils() {

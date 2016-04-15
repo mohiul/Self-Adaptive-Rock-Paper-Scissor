@@ -34,6 +34,11 @@ GLUI_TextBox *historyTextBox;
 GLUI_TextBox *rulesTextBox;
 GLUI_TextBox *actionTextBox;
 GLUI_Spinner *iterationSpnr;
+GLUI_Spinner *noOfGamePlaySpnr;
+GLUI_Spinner *learningFactorSpnr;
+GLUI_Spinner *parentSelectionSpnr;
+GLUI_Spinner *parentPoolWithReplaceSpnr;
+GLUI_Spinner *mutationRateSpnr;
 GLUI_RadioGroup *radioGroup;
 GLUI_Button *ctlStart;
 GLUI_Button *ctlStop;
@@ -44,6 +49,11 @@ GLUI_Button *ctlScissor;
 
 int radioSelection = EXPERIMENT;
 int iterations = 100;
+int noOfGamePlay = 10;
+float learningFactor = 0.1;
+float parentSelection = 0.6;
+float parentPoolWithReplacement = 0.4;
+float mutationRate = 0.5;
 
 RPSGame *rpsGame;
 
@@ -150,6 +160,21 @@ int main(int argc, char** argv)
     initFile->set_text("initialconfig.xml");
     iterationSpnr = new GLUI_Spinner( controlPanel, "Iterations:", &iterations);
     iterationSpnr->set_int_limits( 10, 10000 );
+
+    noOfGamePlaySpnr = new GLUI_Spinner( controlPanel, "No of Game Play:", &noOfGamePlay);
+    noOfGamePlaySpnr->set_int_limits( 1, 500 );
+
+    learningFactorSpnr = new GLUI_Spinner( controlPanel, "Learning Factor:", &learningFactor);
+    learningFactorSpnr->set_float_limits( 0.1, 1.0 );
+
+    parentSelectionSpnr = new GLUI_Spinner( controlPanel, "Parent Selection:", &parentSelection);
+    parentSelectionSpnr->set_float_limits( 0.1, 1.0 );
+
+    parentPoolWithReplaceSpnr = new GLUI_Spinner( controlPanel, "Parent Replacement:", &parentPoolWithReplacement);
+    parentPoolWithReplaceSpnr->set_float_limits( 0.1, 1.0 );
+
+    mutationRateSpnr = new GLUI_Spinner( controlPanel, "Mutation Rate:", &mutationRate);
+    mutationRateSpnr->set_float_limits( 0.1, 1.0 );
 
     GLUI_Panel *resultPanel = glui->add_panel_to_panel(controlPanel, "Result");
     resultTextBox = new GLUI_TextBox(resultPanel, true, 1, control);

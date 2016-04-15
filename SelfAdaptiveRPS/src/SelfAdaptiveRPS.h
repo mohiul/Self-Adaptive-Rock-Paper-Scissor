@@ -46,5 +46,11 @@ enum Move {
 };
 
 extern int iterations;
+extern int noOfGamePlay;
+extern float learningFactor;
+extern float parentSelection;
+extern float parentPoolWithReplacement;
+extern float mutationRate;
+
 
 #endif /* SELFADAPTIVERPS_H_ */

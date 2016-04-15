@@ -19,7 +19,6 @@ RuleEngine::RuleEngine(Player* player) {
 	this->player = player;
 	parser = new RuleParser(this);
 	fitness = 0;
-	learningFactor = 0.1;
 }
 
 RuleEngine::~RuleEngine() {

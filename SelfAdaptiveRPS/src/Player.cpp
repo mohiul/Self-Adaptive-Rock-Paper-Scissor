@@ -9,6 +9,7 @@
 #include <algorithm>
 
 #include "Player.h"
+#include "SelfAdaptiveRPS.h"
 
 Player::Player() {
 	bestRuleEngine = NULL;
@@ -18,7 +19,6 @@ Player::Player() {
 	drawCount = 0;
 	evolution = new Evolution();
 	fitness = 0;
-	learningFactor = 0.1;
 }
 
 Player::~Player() {
@@ -36,7 +36,7 @@ void Player::evolve() {
 	ruleEngines.sort(compare_ruleEngine);
 	int i = 0;
 	int ruleEngineSize = ruleEngines.size();
-	int parentPoolSize = ruleEngineSize*0.6;
+	int parentPoolSize = ruleEngineSize*parentSelection;
 	for (iterator = ruleEngines.begin(); iterator != ruleEngines.end() && i < parentPoolSize; ++iterator, i++) {
 		parentRuleEngines.push_back(*iterator);
 	}
@@ -44,7 +44,7 @@ void Player::evolve() {
 		list<RuleEngine*> childrenList = evolution->evolve(parentRuleEngines);
 		ruleEngines.clear();
 		parentRuleEngines.sort(compare_ruleEngine);
-		int eliteParentPoolSize = ruleEngineSize*0.4;
+		int eliteParentPoolSize = ruleEngineSize*parentPoolWithReplacement;
 		for (iterator = parentRuleEngines.begin(), i = 0; iterator != parentRuleEngines.end() && i < eliteParentPoolSize; ++iterator, ++i) {
 			ruleEngines.push_back(*iterator);
 		}

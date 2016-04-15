@@ -47,7 +47,6 @@ protected:
 	list<char> resultHistory;
 	list<char> moveHistory;
 	float fitness;
-	float learningFactor;
 
 	void actionAddRule(Rule *adapterRule);
 	void actionDeleteRule(Rule *adapterRule);

@@ -109,7 +109,16 @@ void RPSGame::play(int noOfGame) {
 	float p1CumFitness;
 	float p2CumFitness;
 	for(gameIteration = 0; gameIteration < noOfGame; gameIteration++){
-		if(gameIteration % 5){
+		if(gameIteration % noOfGamePlay == 0){
+			float p1AvgFit = player1->getAvgFitness();
+			float p2AvgFit = player2->getAvgFitness();
+			p1CumFitness += p1AvgFit;
+			p2CumFitness += p2AvgFit;
+			cout << gameIteration << player1->getName() << ": Fitness: " << p1AvgFit << endl;
+			cout << player2->getName() << ": Fitness: " << p2AvgFit << endl;
+			fitnessFile << gameIteration << ", " << p1CumFitness << ", " << p2CumFitness << endl;
+			avgFitnessFile << gameIteration << ", " << p1AvgFit << ", " << p2AvgFit << endl;
+
 			player1->evolve();
 			player2->evolve();
 		}
@@ -122,14 +131,6 @@ void RPSGame::play(int noOfGame) {
 //		player1->selfAdapt();
 //		player2->selfAdapt();
 //		updateTextBoxes(p1Move, p2Move);
-		float p1AvgFit = player1->getAvgFitness();
-		float p2AvgFit = player2->getAvgFitness();
-		p1CumFitness += p1AvgFit;
-		p2CumFitness += p2AvgFit;
-//		cout << player1->getName() << ": Fitness: " << p1AvgFitness << endl;
-//		cout << player2->getName() << ": Fitness: " << p2AvgFitness << endl;
-		fitnessFile << gameIteration << ", " << p1CumFitness << ", " << p2CumFitness << endl;
-		avgFitnessFile << gameIteration << ", " << p1AvgFit << ", " << p2AvgFit << endl;
 	}
 //	player1->printHistory();
 //	player2->printHistory();

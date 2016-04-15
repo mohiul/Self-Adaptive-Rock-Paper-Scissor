@@ -18,7 +18,7 @@ public:
 	virtual ~Evolution();
 	list<RuleEngine*> evolve(list<RuleEngine*> parentList);
 	pair<RuleEngine*, RuleEngine*> crossover(RuleEngine* engine1, RuleEngine* engine2);
-	RuleEngine* mutate(RuleEngine* engine);
+	void mutate(RuleEngine* engine);
 protected:
 
 };

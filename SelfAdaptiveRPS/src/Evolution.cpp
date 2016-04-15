@@ -11,6 +11,7 @@
 
 #include "Evolution.h"
 #include "Rule.h"
+#include "SelfAdaptiveRPS.h"
 
 Evolution::Evolution() {
 	// TODO Auto-generated constructor stub
@@ -24,14 +25,20 @@ Evolution::~Evolution() {
 list<RuleEngine*> Evolution::evolve(list<RuleEngine*> parentList) {
 	list<RuleEngine*> childrenList;
 	list<RuleEngine*>::const_iterator iterator;
+	int mutatationVal = mutationRate * 10;
+	int mutationRand = rand() % 10 + 1;
 	for (iterator = parentList.begin(); iterator != parentList.end(); ++iterator) {
 		RuleEngine* engine1 = *iterator;
 		++iterator;
 		if(iterator != parentList.end()){
 			RuleEngine* engine2 = *iterator;
 			pair<RuleEngine*, RuleEngine*> childrenPair = crossover(engine1, engine2);
-			childrenList.push_back(mutate(childrenPair.first));
-			childrenList.push_back(mutate(childrenPair.second));
+			if(mutationRand > mutatationVal){
+				mutate(childrenPair.first);
+				mutate(childrenPair.second);
+			}
+			childrenList.push_back(childrenPair.first);
+			childrenList.push_back(childrenPair.second);
 		}
 	}
 	return childrenList;
@@ -66,7 +73,7 @@ pair<RuleEngine*, RuleEngine*> Evolution::crossover(RuleEngine* engine1, RuleEng
 	return make_pair(child1, child2);
 }
 
-RuleEngine* Evolution::mutate(RuleEngine* engine) {
+void Evolution::mutate(RuleEngine* engine) {
 	Rule* ruleToInsert;
 	list<Rule*>* ruleList = engine->getRules();
 	int listSize = ruleList->size();
@@ -94,6 +101,4 @@ RuleEngine* Evolution::mutate(RuleEngine* engine) {
 		ruleList->remove(*iterator);
 		break;
 	}
-
-	return engine;
 }

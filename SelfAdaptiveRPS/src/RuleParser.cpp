@@ -108,7 +108,11 @@ char RuleParser::nextMove() {
 		}
 	}
 	if(matchedRules.size() == 0){
-		moveToReturn = nextRandomMove();
+		if(strLength == 0){
+			moveToReturn = nextRandomMove();
+		} else {
+			moveToReturn = ruleEngine->player->getHistory().front();
+		}
 	} else {
 //		player->printRuleList(matchedRules);
 		matchedRules.sort(CompareRuleHowRecent());

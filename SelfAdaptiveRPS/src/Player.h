@@ -31,7 +31,6 @@ protected:
 	list<RuleEngine*> ruleEngines;
 	Evolution* evolution;
 	float fitness;
-	float learningFactor;
 	float calculateFitness();
 public:
 	RuleEngine* bestRuleEngine;

@@ -45,6 +45,8 @@ enum Move {
 	SCISSOR
 };
 
+extern int noOfRuleEngine;
+extern int noOfRulesPerEngine;
 extern int iterations;
 extern int noOfGamePlay;
 extern float learningFactor;

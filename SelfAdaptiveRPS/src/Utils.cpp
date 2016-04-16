@@ -48,3 +48,12 @@ std::list<char> Utils::convertStrToList(std::string strToConvert){
 	}
 	return charList;
 }
+
+void Utils::printHistory(std::string name, std::list<char> history){
+	std::list<char>::const_iterator iterator;
+	std::cout << name << " history: ";
+	for (iterator = history.begin(); iterator != history.end(); ++iterator) {
+		std::cout << " " << *iterator;
+	}
+	std::cout << std::endl;
+}

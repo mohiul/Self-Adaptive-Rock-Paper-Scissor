@@ -28,10 +28,13 @@ list<Rule*> RuleParser::matchRules(list<char> history) {
 	list<Rule*> matchedRules;
 	if (history.size() > 0) {
 		list<Rule*>::const_iterator iterator;
+//		cout << "No of rules: " << ruleEngine->rules.size() << endl;
+//		cout << "RuleParser::matchRules historySize: " << history.size() << endl;
+//		Utils::printHistory("RuleParser::matchRules " + ruleEngine->player->getName(), history);
 		for (iterator = ruleEngine->rules.begin(); iterator != ruleEngine->rules.end(); ++iterator) {
 			Rule* rule = *iterator;
 			string expr = rule->getCondition();
-			cout << "expr: " << expr << endl;
+//			cout << "expr: " << expr << endl;
 			bool match = false;
 			unsigned int i = 0;
 			list<char>::const_iterator historyItr;
@@ -41,7 +44,7 @@ list<Rule*> RuleParser::matchRules(list<char> history) {
 					historyItr++, i++) {
 				char historyVal = *historyItr;
 				char expr_ch = expr.at(i);
-				cout << "historyVal: " << historyVal << " expr_ch: " << expr_ch << endl;
+//				cout << "historyVal: " << historyVal << " expr_ch: " << expr_ch << endl;
 				if (expr_ch == '?') {
 					i++;
 					int nextNo = (int) (toDigit(expr.at(i))) - 1;
@@ -106,11 +109,17 @@ struct CompareRuleHowRecent {
 
 char RuleParser::nextMove() {
 	char moveToReturn = 0;
-	string historyStr(Utils::convertListToArray(ruleEngine->player->getHistory()));
-	int strLength = historyStr.length();
+	const list<char> historyList = ruleEngine->player->history;
+	int historyListSize = historyList.size();
 	list<Rule*> matchedRules;
-	for(int i = 0; i < strLength; i++){
-		list<char> historySubList = Utils::convertStrToList(historyStr.substr(i, strLength));
+	for(int i = 0; i < historyListSize; i++){
+//		cout << "historyListSize: " << historyListSize << endl;
+		list<char> historySubList;
+		list<char>::const_iterator listItr = historyList.begin();
+		for(int k = 0; k < i; k++) listItr++;
+		for(; listItr != historyList.end(); listItr++){
+			historySubList.push_back(*listItr);
+		}
 		list<Rule*> newMatchedRules = matchRules(historySubList);
 		list<Rule*>::const_iterator iterator;
 		for (iterator = newMatchedRules.begin(); iterator != newMatchedRules.end(); ++iterator) {
@@ -123,10 +132,10 @@ char RuleParser::nextMove() {
 		}
 	}
 	if(matchedRules.size() == 0){
-		if(strLength == 0){
+		if(historyListSize == 0){
 			moveToReturn = nextRandomMove();
 		} else {
-			moveToReturn = ruleEngine->player->getHistory().front();
+			moveToReturn = ruleEngine->player->moveHistory.front();
 		}
 	} else {
 //		player->printRuleList(matchedRules);

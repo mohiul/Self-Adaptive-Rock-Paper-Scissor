@@ -34,6 +34,8 @@ GLUI_TextBox *historyTextBox;
 GLUI_TextBox *rulesTextBox;
 GLUI_TextBox *actionTextBox;
 GLUI_Spinner *iterationSpnr;
+GLUI_Spinner *noOfRuleEngineSpnr;
+GLUI_Spinner *noOfRulesPerEngineSpnr;
 GLUI_Spinner *noOfGamePlaySpnr;
 GLUI_Spinner *learningFactorSpnr;
 GLUI_Spinner *parentSelectionSpnr;
@@ -48,7 +50,9 @@ GLUI_Button *ctlPaper;
 GLUI_Button *ctlScissor;
 
 int radioSelection = EXPERIMENT;
-int iterations = 100;
+int noOfRuleEngine = 10;
+int noOfRulesPerEngine = 100;
+int iterations = 10;
 int noOfGamePlay = 10;
 float learningFactor = 0.1;
 float parentSelection = 0.6;
@@ -158,8 +162,15 @@ int main(int argc, char** argv)
     initFile->set_w(150);
     initFile->enable();
     initFile->set_text("initialconfig.xml");
+
+    noOfRuleEngineSpnr = new GLUI_Spinner( controlPanel, "No of Rule Engine:", &noOfRuleEngine);
+    noOfRuleEngineSpnr->set_int_limits( 1, 1000 );
+
+    noOfRulesPerEngineSpnr = new GLUI_Spinner( controlPanel, "No of Rules per Engine:", &noOfRulesPerEngine);
+    noOfRulesPerEngineSpnr->set_int_limits( 1, 1000 );
+
     iterationSpnr = new GLUI_Spinner( controlPanel, "Iterations:", &iterations);
-    iterationSpnr->set_int_limits( 10, 10000 );
+    iterationSpnr->set_int_limits( 2, 10000 );
 
     noOfGamePlaySpnr = new GLUI_Spinner( controlPanel, "No of Game Play:", &noOfGamePlay);
     noOfGamePlaySpnr->set_int_limits( 1, 500 );

@@ -123,7 +123,9 @@ void RPSGame::play(int noOfGame) {
 			player2->evolve();
 		}
 		char p1Move = player1->nextMove();
+//		cout << player1->getName() << " Returned move: " << p1Move << endl;
 		char p2Move = player2->nextMove();
+//		cout << player2->getName() << " Returned move: " << p2Move << endl;
 		player1->addHistory(p1Move, p2Move);
 		player2->addHistory(p2Move, p1Move);
 //		player1->adapt();
@@ -132,8 +134,8 @@ void RPSGame::play(int noOfGame) {
 //		player2->selfAdapt();
 //		updateTextBoxes(p1Move, p2Move);
 	}
-//	player1->printHistory();
-//	player2->printHistory();
+	player1->printHistory();
+	player2->printHistory();
 
 }
 
@@ -186,23 +188,21 @@ void RPSGame::printResult() {
 
 void RPSGame::initPlayers() {
 	player1 = initRandomPlayer("P1");
-	player2 = initRandomPlayer("P2");
+//	player2 = initRandomPlayer("P2");
 
-//	player2 = new Player();
-//	player2->setName("P2");
-//	RuleEngine* engine = new RuleEngine(player1);
-//	player2->addRuleEngine(engine);
+	player2 = new Player();
+	player2->setName("P2");
+	RuleEngine* engine = new RuleEngine(player1);
+	player2->addRuleEngine(engine);
 }
 
 Player* RPSGame::initRandomPlayer(string name) {
 	Player* player = new Player();
 	player->setName(name);
 
-	int noOfRuleEngine = 100;
 	for(int i = 0; i < noOfRuleEngine; i++){
 		RuleEngine* engine = new RuleEngine(player);
-		int noOfRules = 50;
-		noOfRules = rand() % noOfRules + 1;
+		int noOfRules = rand() % noOfRulesPerEngine + 1;
 
 		for(int i = 0; i < noOfRules; i++){
 			engine->addRule(Rule::generateRule());

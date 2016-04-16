@@ -40,23 +40,23 @@ RuleEngine::~RuleEngine() {
 void RuleEngine::addHistory(char opponentMove){
 	char ownMove = moveHistory.front();
 	if(ownMove == 'R' && opponentMove == 'R'){
-		resultHistory.push_front('D');
+		resultHistory.push_back('D');
 	} else if(ownMove == 'R' && opponentMove == 'P'){
-		resultHistory.push_front('L');
+		resultHistory.push_back('L');
 	} else if(ownMove == 'R' && opponentMove == 'S'){
-		resultHistory.push_front('W');
+		resultHistory.push_back('W');
 	} else if(ownMove == 'P' && opponentMove == 'R'){
-		resultHistory.push_front('W');
+		resultHistory.push_back('W');
 	} else if(ownMove == 'P' && opponentMove == 'P'){
-		resultHistory.push_front('D');
+		resultHistory.push_back('D');
 	} else if(ownMove == 'P' && opponentMove == 'S'){
-		resultHistory.push_front('L');
+		resultHistory.push_back('L');
 	} else if(ownMove == 'S' && opponentMove == 'R'){
-		resultHistory.push_front('L');
+		resultHistory.push_back('L');
 	} else if(ownMove == 'S' && opponentMove == 'P'){
-		resultHistory.push_front('W');
+		resultHistory.push_back('W');
 	} else if(ownMove == 'S' && opponentMove == 'S'){
-		resultHistory.push_front('D');
+		resultHistory.push_back('D');
 	}
 	calculateFitness();
 }
@@ -79,7 +79,7 @@ float RuleEngine::calculateFitness() {
 
 char RuleEngine::nextMove() {
 	char nextMove = parser->nextMove();
-	moveHistory.push_front(nextMove);
+	moveHistory.push_back(nextMove);
 	return nextMove;
 }
 

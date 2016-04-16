@@ -26,14 +26,14 @@ protected:
 	int looseCount;
 	int drawCount;
 	list<char> resultHistory;
-	list<char> moveHistory;
-	list<char> history;
 	list<RuleEngine*> ruleEngines;
 	Evolution* evolution;
 	float fitness;
 	float calculateFitness();
 public:
 	RuleEngine* bestRuleEngine;
+	list<char> history;
+	list<char> moveHistory;
 	Player();
 	virtual ~Player();
 	string getName();
@@ -49,7 +49,6 @@ public:
 	list<Rule*> getRules();
 	list<Adapter*> getAdapters();
 	char nextMove();
-	const list<char>& getHistory() const;
 	void addRuleEngine(RuleEngine* engine);
 	RuleEngine* getBestRuleEngine();
 	void evolve();

@@ -104,10 +104,6 @@ int Player::getDraw() {
 	return drawCount;
 }
 
-const list<char>& Player::getHistory() const {
-	return history;
-}
-
 void Player::addRuleEngine(RuleEngine* engine) {
 	return ruleEngines.push_back(engine);
 }
@@ -120,46 +116,47 @@ void Player::addHistory(char ownMove, char opponentMove){
 		engine->addHistory(opponentMove);
 	}
 
-	moveHistory.push_front(ownMove);
+	moveHistory.push_back(ownMove);
 	char gameResult = 0;
 	if(ownMove == 'R' && opponentMove == 'R'){
 		gameResult = '3';
 		drawCount++;
-		resultHistory.push_front('D');
+		resultHistory.push_back('D');
 	} else if(ownMove == 'R' && opponentMove == 'P'){
 		gameResult = '0';
 		looseCount++;
-		resultHistory.push_front('L');
+		resultHistory.push_back('L');
 	} else if(ownMove == 'R' && opponentMove == 'S'){
 		gameResult = '8';
 		winCount++;
-		resultHistory.push_front('W');
+		resultHistory.push_back('W');
 	} else if(ownMove == 'P' && opponentMove == 'R'){
 		gameResult = '6';
 		winCount++;
-		resultHistory.push_front('W');
+		resultHistory.push_back('W');
 	} else if(ownMove == 'P' && opponentMove == 'P'){
 		gameResult = '4';
 		drawCount++;
-		resultHistory.push_front('D');
+		resultHistory.push_back('D');
 	} else if(ownMove == 'P' && opponentMove == 'S'){
 		gameResult = '1';
 		looseCount++;
-		resultHistory.push_front('L');
+		resultHistory.push_back('L');
 	} else if(ownMove == 'S' && opponentMove == 'R'){
 		gameResult = '2';
 		looseCount++;
-		resultHistory.push_front('L');
+		resultHistory.push_back('L');
 	} else if(ownMove == 'S' && opponentMove == 'P'){
 		gameResult = '7';
 		winCount++;
-		resultHistory.push_front('W');
+		resultHistory.push_back('W');
 	} else if(ownMove == 'S' && opponentMove == 'S'){
 		gameResult = '5';
 		drawCount++;
-		resultHistory.push_front('D');
+		resultHistory.push_back('D');
 	}
-	history.push_front(gameResult);
+//	cout << "Player: " << name << " Adding history: " << gameResult << endl;
+	history.push_back(gameResult);
 	calculateFitness();
 }
 

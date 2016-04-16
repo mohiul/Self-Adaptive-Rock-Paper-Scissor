@@ -114,8 +114,8 @@ void RPSGame::play(int noOfGame) {
 			float p2AvgFit = player2->getAvgFitness();
 			p1CumFitness += p1AvgFit;
 			p2CumFitness += p2AvgFit;
-			cout << gameIteration << player1->getName() << ": Fitness: " << p1AvgFit << endl;
-			cout << player2->getName() << ": Fitness: " << p2AvgFit << endl;
+//			cout << gameIteration << player1->getName() << ": Fitness: " << p1AvgFit << endl;
+//			cout << player2->getName() << ": Fitness: " << p2AvgFit << endl;
 			fitnessFile << gameIteration << ", " << p1CumFitness << ", " << p2CumFitness << endl;
 			avgFitnessFile << gameIteration << ", " << p1AvgFit << ", " << p2AvgFit << endl;
 
@@ -134,8 +134,8 @@ void RPSGame::play(int noOfGame) {
 //		player2->selfAdapt();
 //		updateTextBoxes(p1Move, p2Move);
 	}
-	player1->printHistory();
-	player2->printHistory();
+//	player1->printHistory();
+//	player2->printHistory();
 
 }
 
@@ -188,12 +188,12 @@ void RPSGame::printResult() {
 
 void RPSGame::initPlayers() {
 	player1 = initRandomPlayer("P1");
-//	player2 = initRandomPlayer("P2");
+	player2 = initRandomPlayer("P2");
 
-	player2 = new Player();
-	player2->setName("P2");
-	RuleEngine* engine = new RuleEngine(player1);
-	player2->addRuleEngine(engine);
+//	player2 = new Player();
+//	player2->setName("P2");
+//	RuleEngine* engine = new RuleEngine(player1);
+//	player2->addRuleEngine(engine);
 }
 
 Player* RPSGame::initRandomPlayer(string name) {

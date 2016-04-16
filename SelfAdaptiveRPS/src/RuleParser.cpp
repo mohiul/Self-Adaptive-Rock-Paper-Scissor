@@ -92,7 +92,7 @@ list<Rule*> RuleParser::matchRules(list<char> history) {
 
 			if (match) {
 				matchedRules.push_back(rule);
-				cout << "Rule matched: " << rule->getString() << endl;
+//				cout << "Rule matched: " << rule->getString() << endl;
 			}
 		}
 	}

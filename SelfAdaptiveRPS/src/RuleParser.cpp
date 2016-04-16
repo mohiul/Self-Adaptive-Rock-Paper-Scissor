@@ -31,50 +31,65 @@ list<Rule*> RuleParser::matchRules(list<char> history) {
 		for (iterator = ruleEngine->rules.begin(); iterator != ruleEngine->rules.end(); ++iterator) {
 			Rule* rule = *iterator;
 			string expr = rule->getCondition();
-			//cout << "expr: " << expr << endl;
+			cout << "expr: " << expr << endl;
 			bool match = false;
-			unsigned int i;
+			unsigned int i = 0;
 			list<char>::const_iterator historyItr;
-			for (i = 0, historyItr = history.begin();
-					i < expr.length() && historyItr != history.end();
-					i++, historyItr++) {
+			for (historyItr = history.begin();
+					historyItr != history.end()
+							&& i < expr.length();
+					historyItr++, i++) {
 				char historyVal = *historyItr;
 				char expr_ch = expr.at(i);
-				//cout << "historyVal: " << historyVal << " expr_ch: " << expr_ch << endl;
+				cout << "historyVal: " << historyVal << " expr_ch: " << expr_ch << endl;
 				if (expr_ch == '?') {
-					int nextNo = (int) (toDigit(expr.at(++i))) - 1;
-					//cout << "ignoreNo: " << nextNo << endl;
+					i++;
+					int nextNo = (int) (toDigit(expr.at(i))) - 1;
+					if(nextNo < 0) historyItr--;// For ?0 scenarios
 					while (nextNo > 0 && historyItr != history.end()) {
 						historyItr++;
 						nextNo--;
 					}
 					if (nextNo <= 0 && historyItr != history.end()) {
+						match = true;
 						continue;
-					} else {
-						break;
 					}
 				} else if (expr_ch == '<') {
 					int nextNo = (int) (toDigit(expr.at(++i)));
 					int historyNo = (int) (toDigit(historyVal));
 					if (historyNo < nextNo) {
+						match = true;
 						continue;
+					} else {
+						match = false;
+						break;
 					}
 				} else if (expr_ch == '>') {
 					int nextNo = (int) (toDigit(expr.at(++i)));
 					int historyNo = (int) (toDigit(historyVal));
 					if (historyNo > nextNo) {
+						match = true;
 						continue;
+					} else {
+						match = false;
+						break;
 					}
 				} else if (historyVal != expr_ch) {
+					match = false;
 					break;
+				} else if (historyVal == expr_ch) {
+					match = true;
 				}
 			}
-			if (i == expr.length())
-				match = true;
+			if (i < expr.length() && historyItr == history.end()) {
+				match = false;
+			} else if(i == expr.length() && historyItr != history.end()) {
+				match = false;
+			}
 
 			if (match) {
 				matchedRules.push_back(rule);
-//				cout << "Rule matched: " << rule->getString() << endl;
+				cout << "Rule matched: " << rule->getString() << endl;
 			}
 		}
 	}
@@ -151,3 +166,16 @@ void RuleParser::printRuleList(list<Rule*> ruleList){
 	}
 	cout << ruleEngine->player->getName() << " rule list end: " << endl;
 }
+
+//int main(){
+//	RuleEngine engine(new Player());
+//	engine.addRule(new Rule("1>134", 'R'));
+//	RuleParser parser(&engine);
+//	list<char> historyList;
+//	historyList.push_back('1');
+//	historyList.push_back('2');
+//	historyList.push_back('3');
+//	historyList.push_back('4');
+//	list<Rule*> matchedRules = parser.matchRules(historyList);
+//	return 0;
+//}

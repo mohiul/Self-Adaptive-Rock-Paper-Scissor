@@ -54,5 +54,7 @@ extern float parentSelection;
 extern float parentPoolWithReplacement;
 extern float mutationRate;
 
+extern int usingRuleCount;
+
 
 #endif /* SELFADAPTIVERPS_H_ */

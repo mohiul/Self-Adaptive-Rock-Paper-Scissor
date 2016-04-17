@@ -44,6 +44,9 @@ void Player::evolve() {
 	int i = 0;
 	int ruleEngineSize = ruleEngines.size();
 	int parentPoolSize = ruleEngineSize*parentSelection;
+	if(parentPoolSize == 0){
+		cerr << "ParentPoolSize should be greater than zero! "<< endl;
+	}
 	for (iterator = ruleEngines.begin(); iterator != ruleEngines.end(); ++iterator, i++) {
 		if(i < parentPoolSize){
 			parentRuleEngines.push_back(*iterator);
@@ -57,6 +60,7 @@ void Player::evolve() {
 		ruleEngines.clear();
 		parentRuleEngines.sort(compare_ruleEngine);
 		int eliteParentPoolSize = ruleEngineSize*parentPoolWithReplacement;
+//		cout << "eliteParentPoolSize: " << eliteParentPoolSize << endl;
 		for (iterator = parentRuleEngines.begin(), i = 0; iterator != parentRuleEngines.end() && i < eliteParentPoolSize; ++iterator, ++i) {
 			if(i < eliteParentPoolSize){
 				ruleEngines.push_back(*iterator);
@@ -65,6 +69,7 @@ void Player::evolve() {
 			}
 
 		}
+//		cout << "childrenList.size(): " << childrenList.size() << endl;
 		for (iterator = childrenList.begin(); iterator != childrenList.end(); ++iterator) {
 			ruleEngines.push_back(*iterator);
 		}

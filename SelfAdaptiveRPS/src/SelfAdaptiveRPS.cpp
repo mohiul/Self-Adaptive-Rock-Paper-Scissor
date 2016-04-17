@@ -50,14 +50,16 @@ GLUI_Button *ctlPaper;
 GLUI_Button *ctlScissor;
 
 int radioSelection = EXPERIMENT;
-int noOfRuleEngine = 10;
+int noOfRuleEngine = 100;
 int noOfRulesPerEngine = 100;
-int iterations = 10;
-int noOfGamePlay = 10;
+int iterations = 100;
+int noOfGamePlay = 5;
 float learningFactor = 0.01;
-float parentSelection = 1.0;
-float parentPoolWithReplacement = 0.0;
+float parentSelection = 0.8;
+float parentPoolWithReplacement = 0.2;
 float mutationRate = 0.5;
+
+int usingRuleCount = 0;
 
 RPSGame *rpsGame;
 

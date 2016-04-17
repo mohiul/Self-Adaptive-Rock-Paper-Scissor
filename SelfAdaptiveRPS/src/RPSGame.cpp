@@ -18,7 +18,7 @@ RPSGame::RPSGame(std::string configFile) {
 	player1 = NULL;
 	player2 = NULL;
 	gameIteration = 0;
-	usingRuleCount = 0;
+	totalIteration = 0;
 	gameNo++;
 //	xmlConfigReader = new XMLConfigReader(this);
 //	xmlConfigReader->readConfigFile(configFile);
@@ -36,6 +36,10 @@ RPSGame::~RPSGame() {
 	player2->~Player();
 //	xmlConfigReader->~XMLConfigReader();
 	avgFitnessFile.close();
+}
+
+void RPSGame::setTotalIterations(int iterations) {
+	totalIteration = iterations;
 }
 
 void RPSGame::updateTextBoxes(char p1Move, char p2Move) {
@@ -91,16 +95,8 @@ char RPSGame::getMoveFromEnum(Move move){
 }
 
 void RPSGame::playOneMove(Move move) {
-	float p1CumFitness;
-	float p2CumFitness;
 	if(gameIteration % noOfGamePlay == 0){
-		float p1AvgFit = player1->getAvgFitness();
-		float p2AvgFit = player2->getAvgFitness();
-		p1CumFitness += p1AvgFit;
-		p2CumFitness += p2AvgFit;
-		fitnessFile << gameIteration << ", " << p1CumFitness << ", " << p2CumFitness << endl;
-		avgFitnessFile << gameIteration << ", " << p1AvgFit << ", " << p2AvgFit << endl;
-
+		avgFitnessFile << gameIteration << ", " << player1->getAvgFitness() << ", " << player2->getAvgFitness() << endl;
 		player1->evolve();
 		player2->evolve();
 	}
@@ -117,28 +113,28 @@ void RPSGame::playOneMove(Move move) {
 	gameIteration++;
 }
 
-void RPSGame::play(int noOfGame) {
-	for(gameIteration = 0; gameIteration < noOfGame; gameIteration++){
-		if(gameIteration % noOfGamePlay == 0){
-			float p1AvgFit = player1->getAvgFitness();
-			float p2AvgFit = player2->getAvgFitness();
-			avgFitnessFile << gameIteration << ", " << p1AvgFit << ", " << p2AvgFit << endl;
-			player1->evolve();
-			player2->evolve();
-		}
-		char p1Move = player1->nextMove();
-		char p2Move = player2->nextMove();
-		player1->addHistory(p1Move, p2Move);
-		player2->addHistory(p2Move, p1Move);
+bool RPSGame::play() {
+	if(gameIteration >= totalIteration){
+		player1->printHistory();
+		player2->printHistory();
+		return false;
+	}
+	if(gameIteration % noOfGamePlay == 0){
+		avgFitnessFile << gameIteration << ", " << player1->getAvgFitness() << ", " << player2->getAvgFitness() << endl;
+		player1->evolve();
+		player2->evolve();
+	}
+	char p1Move = player1->nextMove();
+	char p2Move = player2->nextMove();
+	player1->addHistory(p1Move, p2Move);
+	player2->addHistory(p2Move, p1Move);
 //		player1->adapt();
 //		player2->adapt();
 //		player1->selfAdapt();
 //		player2->selfAdapt();
-		updateTextBoxes(p1Move, p2Move);
-	}
-	player1->printHistory();
-	player2->printHistory();
-
+	updateTextBoxes(p1Move, p2Move);
+	gameIteration++;
+	return true;
 }
 
 std::string RPSGame::printRules(Player *player) {

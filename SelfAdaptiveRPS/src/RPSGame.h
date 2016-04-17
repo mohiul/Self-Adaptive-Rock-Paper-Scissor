@@ -23,18 +23,20 @@ class RPSGame {
 public:
 	RPSGame(std::string configFile);
 	virtual ~RPSGame();
-	void play(int noOfGame);
+	bool play();
 	void playOneMove(Move move);
 	std::string printRules(Player *player);
 	std::string printAdapters(Player *player);
 	void printResult();
 	void initPlayers();
 	Player* initRandomPlayer(string name);
+	void setTotalIterations(int iterations);
 protected:
 	Player *player1;
 	Player *player2;
 	static int gameNo;
 	int gameIteration;
+	int totalIteration;
 	std::string resultBoxText;
 	std::string historyBoxText;
 	ofstream fitnessFile;

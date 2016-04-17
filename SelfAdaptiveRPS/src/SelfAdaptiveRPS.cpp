@@ -43,6 +43,7 @@ GLUI_Spinner *parentPoolWithReplaceSpnr;
 GLUI_Spinner *mutationRateSpnr;
 GLUI_RadioGroup *radioGroup;
 GLUI_Button *ctlStart;
+GLUI_Button *ctlPause;
 GLUI_Button *ctlStop;
 GLUI_Button *ctlExit;
 GLUI_Button *ctlRock;
@@ -59,7 +60,7 @@ float parentSelection = 0.8;
 float parentPoolWithReplacement = 0.2;
 float mutationRate = 0.5;
 
-int usingRuleCount = 0;
+static bool paused = false;
 
 RPSGame *rpsGame;
 
@@ -87,8 +88,18 @@ void stop() {
 	ctlPaper->disable();
 	ctlScissor->disable();
 	ctlStop->disable();
+	ctlPause->disable();
 	ctlStart->enable();
 	iterationSpnr->enable();
+}
+
+void idle()
+{
+	if(!rpsGame->play()){
+		glutIdleFunc(0);
+		rpsGame->printResult();
+		stop();
+	}
 }
 
 void start() {
@@ -102,19 +113,29 @@ void start() {
 		ctlScissor->enable();
 		ctlStop->enable();
 		ctlStart->disable();
+		ctlPause->disable();
 		break;
 	case EXPERIMENT:
 		iterationSpnr->enable();
 		ctlStop->enable();
-		rpsGame->play(iterations);
-		rpsGame->printResult();
-		stop();
+		ctlPause->enable();
+		rpsGame->setTotalIterations(iterations);
+		glutIdleFunc(idle);
 		break;
 	}
 }
 
 void pause() {
-
+    if (paused)
+    {
+        glutIdleFunc(idle);
+    }
+    else
+    {
+    	rpsGame->printResult();
+        glutIdleFunc(0);
+    }
+    paused = !paused;
 }
 
 /**
@@ -185,6 +206,7 @@ int main(int argc, char** argv)
 
     GLUI_Panel *experimentPanel = glui->add_panel_to_panel(controlPanel, "Experiment");
     ctlStart = glui->add_button_to_panel(experimentPanel, "Start", START_BTN, control);
+    ctlPause = glui->add_button_to_panel(experimentPanel, "Pause", PAUSE_BTN, control);
     ctlStop = glui->add_button_to_panel(experimentPanel, "Stop", STOP_BTN, control);
     ctlStop->disable();
     ctlExit = glui->add_button_to_panel(experimentPanel, "Exit", EXIT_BTN, control);

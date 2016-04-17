@@ -22,6 +22,13 @@ Player::Player() {
 }
 
 Player::~Player() {
+	for (list<RuleEngine*>::const_iterator iterator = ruleEngines.begin();
+			iterator != ruleEngines.end();
+			++iterator) {
+//		(*iterator)->delRulesAdapters();
+		(*iterator)->~RuleEngine();
+	}
+	evolution->~Evolution();
 	history.clear();
 }
 
@@ -37,8 +44,13 @@ void Player::evolve() {
 	int i = 0;
 	int ruleEngineSize = ruleEngines.size();
 	int parentPoolSize = ruleEngineSize*parentSelection;
-	for (iterator = ruleEngines.begin(); iterator != ruleEngines.end() && i < parentPoolSize; ++iterator, i++) {
-		parentRuleEngines.push_back(*iterator);
+	for (iterator = ruleEngines.begin(); iterator != ruleEngines.end(); ++iterator, i++) {
+		if(i < parentPoolSize){
+			parentRuleEngines.push_back(*iterator);
+		} else {
+//			(*iterator)->delRulesAdapters();
+			(*iterator)->~RuleEngine();
+		}
 	}
 	if(ruleEngines.size() > 1){
 		list<RuleEngine*> childrenList = evolution->evolve(parentRuleEngines);
@@ -46,7 +58,12 @@ void Player::evolve() {
 		parentRuleEngines.sort(compare_ruleEngine);
 		int eliteParentPoolSize = ruleEngineSize*parentPoolWithReplacement;
 		for (iterator = parentRuleEngines.begin(), i = 0; iterator != parentRuleEngines.end() && i < eliteParentPoolSize; ++iterator, ++i) {
-			ruleEngines.push_back(*iterator);
+			if(i < eliteParentPoolSize){
+				ruleEngines.push_back(*iterator);
+			} else {
+				(*iterator)->~RuleEngine();
+			}
+
 		}
 		for (iterator = childrenList.begin(); iterator != childrenList.end(); ++iterator) {
 			ruleEngines.push_back(*iterator);
@@ -65,11 +82,9 @@ RuleEngine* Player::getBestRuleEngine(){
 
 	list<RuleEngine*> bestFitnessEngines;
 	float bestFitness = ruleEngines.front()->getFitness();
-//	cout << name << ": current best fitness: " << bestFitness << endl;
 	list<RuleEngine*>::const_iterator iterator;
 	for (iterator = ruleEngines.begin(); iterator != ruleEngines.end(); ++iterator) {
 		RuleEngine* engine = *iterator;
-//		cout << name << ": engine->getFitness(): " << engine->getFitness() << endl;
 		if(engine->getFitness() == bestFitness){
 			bestFitnessEngines.push_back(engine);
 		}
@@ -78,7 +93,6 @@ RuleEngine* Player::getBestRuleEngine(){
 	if(bestFitnessEngines.size() > 1){
 		randomFitnessEngine = rand() % bestFitnessEngines.size();
 	}
-//	cout << name << ": randomFitnessEngine: " << randomFitnessEngine << endl;
 	iterator = bestFitnessEngines.begin();
 	advance(iterator, randomFitnessEngine);
 	return *iterator;

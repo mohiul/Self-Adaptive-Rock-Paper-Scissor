@@ -54,9 +54,9 @@ int noOfRuleEngine = 10;
 int noOfRulesPerEngine = 100;
 int iterations = 10;
 int noOfGamePlay = 10;
-float learningFactor = 0.1;
-float parentSelection = 0.6;
-float parentPoolWithReplacement = 0.4;
+float learningFactor = 0.01;
+float parentSelection = 1.0;
+float parentPoolWithReplacement = 0.0;
 float mutationRate = 0.5;
 
 RPSGame *rpsGame;
@@ -176,13 +176,13 @@ int main(int argc, char** argv)
     noOfGamePlaySpnr->set_int_limits( 1, 500 );
 
     learningFactorSpnr = new GLUI_Spinner( controlPanel, "Learning Factor:", &learningFactor);
-    learningFactorSpnr->set_float_limits( 0.1, 1.0 );
+    learningFactorSpnr->set_float_limits( 0.001, 1.0 );
 
     parentSelectionSpnr = new GLUI_Spinner( controlPanel, "Parent Selection:", &parentSelection);
-    parentSelectionSpnr->set_float_limits( 0.1, 1.0 );
+    parentSelectionSpnr->set_float_limits( 0.0, 1.0 );
 
     parentPoolWithReplaceSpnr = new GLUI_Spinner( controlPanel, "Parent Replacement:", &parentPoolWithReplacement);
-    parentPoolWithReplaceSpnr->set_float_limits( 0.1, 1.0 );
+    parentPoolWithReplaceSpnr->set_float_limits( 0.0, 1.0 );
 
     mutationRateSpnr = new GLUI_Spinner( controlPanel, "Mutation Rate:", &mutationRate);
     mutationRateSpnr->set_float_limits( 0.1, 1.0 );

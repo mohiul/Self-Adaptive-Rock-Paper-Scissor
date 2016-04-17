@@ -25,6 +25,7 @@ class RuleEngine {
 public:
 	RuleEngine(Player* player);
 	virtual ~RuleEngine();
+	void delRulesAdapters();
 	char nextMove();
 	void addRule(Rule* rule);
 	void addAdapter(Adapter* adapter);

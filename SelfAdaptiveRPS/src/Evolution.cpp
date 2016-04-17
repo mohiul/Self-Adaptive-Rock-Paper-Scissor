@@ -30,7 +30,9 @@ list<RuleEngine*> Evolution::evolve(list<RuleEngine*> parentList) {
 	for (iterator = parentList.begin(); iterator != parentList.end(); ++iterator) {
 		RuleEngine* engine1 = *iterator;
 		++iterator;
-		if(iterator != parentList.end()){
+		if(iterator == parentList.end()){
+			break;
+		} else {
 			RuleEngine* engine2 = *iterator;
 			pair<RuleEngine*, RuleEngine*> childrenPair = crossover(engine1, engine2);
 			if(mutationRand > mutatationVal){

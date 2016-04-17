@@ -23,16 +23,23 @@ RuleEngine::RuleEngine(Player* player) {
 
 RuleEngine::~RuleEngine() {
 	parser->~RuleParser();
+}
+
+void RuleEngine::delRulesAdapters() {
 	for (list<Rule*>::const_iterator iterator = rules.begin();
 			iterator != rules.end();
 			++iterator) {
-		(*iterator)->~Rule();
+		if((*iterator) != NULL){
+			(*iterator)->~Rule();
+		}
 	}
 	rules.clear();
 	for (list<Adapter*>::const_iterator iterator = adapters.begin();
 			iterator != adapters.end();
 			++iterator) {
-		(*iterator)->~Adapter();
+		if((*iterator) != NULL){
+			(*iterator)->~Adapter();
+		}
 	}
 	adapters.clear();
 }

@@ -93,6 +93,19 @@ char RPSGame::getMoveFromEnum(Move move){
 }
 
 void RPSGame::playOneMove(Move move) {
+	float p1CumFitness;
+	float p2CumFitness;
+	if(gameIteration % noOfGamePlay == 0){
+		float p1AvgFit = player1->getAvgFitness();
+		float p2AvgFit = player2->getAvgFitness();
+		p1CumFitness += p1AvgFit;
+		p2CumFitness += p2AvgFit;
+		fitnessFile << gameIteration << ", " << p1CumFitness << ", " << p2CumFitness << endl;
+		avgFitnessFile << gameIteration << ", " << p1AvgFit << ", " << p2AvgFit << endl;
+
+		player1->evolve();
+		player2->evolve();
+	}
 	char p1Move = player1->nextMove();
 	char p2Move = getMoveFromEnum(move);
 	player1->addHistory(p1Move, p2Move);

@@ -11,7 +11,7 @@
 #define window_width  640
 #define window_height 480
 #define textbox_width 150
-#define textbox_height 215
+#define textbox_height 195
 #define resultbox_width 130
 #define resultbox_height 155
 
@@ -88,6 +88,7 @@ void stop() {
 	ctlScissor->disable();
 	ctlStop->disable();
 	ctlStart->enable();
+	iterationSpnr->enable();
 }
 
 void start() {
@@ -158,10 +159,30 @@ int main(int argc, char** argv)
     glui = GLUI_Master.create_glui("Rock Paper Scissor", 0, 200, 200);
 
     GLUI_Panel *controlPanel = glui->add_panel("Control");
-    controlPanel->set_alignment(GLUI_ALIGN_RIGHT);
+//    controlPanel->set_alignment(GLUI_ALIGN_RIGHT);
+
+    GLUI_Panel *selectPanel = glui->add_panel_to_panel(controlPanel, "Select");
+
+    radioGroup = glui->add_radiogroup_to_panel(selectPanel, &radioSelection);
+    glui->add_radiobutton_to_group(radioGroup, "Play");
+    glui->add_radiobutton_to_group(radioGroup, "Experiment");
+
+    GLUI_Panel *playPanel = glui->add_panel_to_panel(controlPanel, "Play");
+    ctlRock = glui->add_button_to_panel(playPanel, "Rock", ROCK_BTN, control);
+    ctlRock->disable();
+    ctlPaper = glui->add_button_to_panel(playPanel, "Paper", PAPER_BTN, control);
+    ctlPaper->disable();
+    ctlScissor = glui->add_button_to_panel(playPanel, "Scissor", SCISSOR_BTN, control);
+    ctlScissor->disable();
+
+    GLUI_Panel *experimentPanel = glui->add_panel_to_panel(controlPanel, "Experiment");
+    ctlStart = glui->add_button_to_panel(experimentPanel, "Start", START_BTN, control);
+    ctlStop = glui->add_button_to_panel(experimentPanel, "Stop", STOP_BTN, control);
+    ctlStop->disable();
+    ctlExit = glui->add_button_to_panel(experimentPanel, "Exit", EXIT_BTN, control);
 
     initFile = glui->add_edittext_to_panel(controlPanel, "Rule Init File ", GLUI_EDITTEXT_TEXT);
-    initFile->set_w(150);
+    initFile->set_w(200);
     initFile->enable();
     initFile->set_text("initialconfig.xml");
 
@@ -188,33 +209,15 @@ int main(int argc, char** argv)
 
     mutationRateSpnr = new GLUI_Spinner( controlPanel, "Mutation Rate:", &mutationRate);
     mutationRateSpnr->set_float_limits( 0.1, 1.0 );
+//    glui->add_column_to_panel(controlPanel, true);
 
-    GLUI_Panel *resultPanel = glui->add_panel_to_panel(controlPanel, "Result");
-    resultTextBox = new GLUI_TextBox(resultPanel, true, 1, control);
-    resultTextBox->set_h(resultbox_height);
-    resultTextBox->set_w(resultbox_width);
-    glui->add_column_to_panel(controlPanel, false);
-
-    GLUI_Panel *selectPanel = glui->add_panel_to_panel(controlPanel, "Select");
-
-    radioGroup = glui->add_radiogroup_to_panel(selectPanel, &radioSelection);
-    glui->add_radiobutton_to_group(radioGroup, "Play");
-    glui->add_radiobutton_to_group(radioGroup, "Experiment");
-
-    GLUI_Panel *playPanel = glui->add_panel_to_panel(controlPanel, "Play");
-    ctlRock = glui->add_button_to_panel(playPanel, "Rock", ROCK_BTN, control);
-    ctlRock->disable();
-    ctlPaper = glui->add_button_to_panel(playPanel, "Paper", PAPER_BTN, control);
-    ctlPaper->disable();
-    ctlScissor = glui->add_button_to_panel(playPanel, "Scissor", SCISSOR_BTN, control);
-    ctlScissor->disable();
-
-    GLUI_Panel *experimentPanel = glui->add_panel_to_panel(controlPanel, "Experiment");
-    ctlStart = glui->add_button_to_panel(experimentPanel, "Start", START_BTN, control);
-    ctlStop = glui->add_button_to_panel(experimentPanel, "Stop", STOP_BTN, control);
-    ctlStop->disable();
-    ctlExit = glui->add_button_to_panel(experimentPanel, "Exit", EXIT_BTN, control);
     glui->add_column(false);
+
+    GLUI_Panel *resultPanel = glui->add_panel("Result");
+    resultTextBox = new GLUI_TextBox(resultPanel, true, 1, control);
+    resultTextBox->set_h(textbox_height);
+    resultTextBox->set_w(textbox_width);
+//    glui->add_column(false);
 
     GLUI_Panel *historyPanel = glui->add_panel("History");
     historyTextBox = new GLUI_TextBox(historyPanel, true, 1, control);
@@ -226,7 +229,7 @@ int main(int argc, char** argv)
     rulesTextBox = new GLUI_TextBox(rulesPanel,true,1,control);
     rulesTextBox->set_h(textbox_height);
     rulesTextBox->set_w(textbox_width);
-    glui->add_column(false);
+//    glui->add_column(false);
 
     GLUI_Panel *actionPanel = glui->add_panel("Adapters");
     actionTextBox = new GLUI_TextBox(actionPanel,true,1,control);

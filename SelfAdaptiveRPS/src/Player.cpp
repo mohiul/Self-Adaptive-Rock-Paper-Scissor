@@ -245,9 +245,9 @@ string Player::getEntireHistoryStr(){
 string Player::getCurrentHistoryStr(bool flipStr){
 	ostringstream oss;
 	if(flipStr){
-		oss << moveHistory.front() << " " << history.front() << " " << resultHistory.front();
+		oss << moveHistory.back() << " " << history.back() << " " << resultHistory.back();
 	} else {
-		oss << resultHistory.front() << " " << history.front() << " " << moveHistory.front();
+		oss << resultHistory.back() << " " << history.back() << " " << moveHistory.back();
 	}
 	return oss.str();
 }

@@ -28,7 +28,6 @@ RPSGame::RPSGame(std::string configFile) {
 	}
 	resultBoxText = resultTextBox->get_text();
 
-	fitnessFile.open ("fitness.txt");
 	avgFitnessFile.open ("avgFitness.txt");
 }
 
@@ -36,7 +35,6 @@ RPSGame::~RPSGame() {
 	player1->~Player();
 	player2->~Player();
 //	xmlConfigReader->~XMLConfigReader();
-	fitnessFile.close();
 	avgFitnessFile.close();
 }
 
@@ -120,26 +118,16 @@ void RPSGame::playOneMove(Move move) {
 }
 
 void RPSGame::play(int noOfGame) {
-	float p1CumFitness;
-	float p2CumFitness;
 	for(gameIteration = 0; gameIteration < noOfGame; gameIteration++){
 		if(gameIteration % noOfGamePlay == 0){
 			float p1AvgFit = player1->getAvgFitness();
 			float p2AvgFit = player2->getAvgFitness();
-			p1CumFitness += p1AvgFit;
-			p2CumFitness += p2AvgFit;
-//			cout << gameIteration << player1->getName() << ": Fitness: " << p1AvgFit << endl;
-//			cout << player2->getName() << ": Fitness: " << p2AvgFit << endl;
-			fitnessFile << gameIteration << ", " << p1CumFitness << ", " << p2CumFitness << endl;
 			avgFitnessFile << gameIteration << ", " << p1AvgFit << ", " << p2AvgFit << endl;
-
 			player1->evolve();
 			player2->evolve();
 		}
 		char p1Move = player1->nextMove();
-//		cout << player1->getName() << " Returned move: " << p1Move << endl;
 		char p2Move = player2->nextMove();
-//		cout << player2->getName() << " Returned move: " << p2Move << endl;
 		player1->addHistory(p1Move, p2Move);
 		player2->addHistory(p2Move, p1Move);
 //		player1->adapt();

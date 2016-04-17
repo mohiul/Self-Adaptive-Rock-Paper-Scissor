@@ -113,6 +113,10 @@ void start() {
 	}
 }
 
+void pause() {
+
+}
+
 /**
  * Callback function for all GLUI controls.
  */
@@ -122,6 +126,10 @@ void control(int key)
     {
     case START_BTN:
     	start();
+        break;
+
+    case PAUSE_BTN:
+    	pause();
         break;
 
     case STOP_BTN:
@@ -209,7 +217,6 @@ int main(int argc, char** argv)
 
     mutationRateSpnr = new GLUI_Spinner( controlPanel, "Mutation Rate:", &mutationRate);
     mutationRateSpnr->set_float_limits( 0.1, 1.0 );
-//    glui->add_column_to_panel(controlPanel, true);
 
     glui->add_column(false);
 
@@ -217,7 +224,6 @@ int main(int argc, char** argv)
     resultTextBox = new GLUI_TextBox(resultPanel, true, 1, control);
     resultTextBox->set_h(textbox_height);
     resultTextBox->set_w(textbox_width);
-//    glui->add_column(false);
 
     GLUI_Panel *historyPanel = glui->add_panel("History");
     historyTextBox = new GLUI_TextBox(historyPanel, true, 1, control);
@@ -229,7 +235,6 @@ int main(int argc, char** argv)
     rulesTextBox = new GLUI_TextBox(rulesPanel,true,1,control);
     rulesTextBox->set_h(textbox_height);
     rulesTextBox->set_w(textbox_width);
-//    glui->add_column(false);
 
     GLUI_Panel *actionPanel = glui->add_panel("Adapters");
     actionTextBox = new GLUI_TextBox(actionPanel,true,1,control);

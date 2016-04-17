@@ -15,10 +15,13 @@
 #include "SelfAdaptiveRPS.h"
 #include "Utils.h"
 
+int RuleEngine::totalNoOfRuleEngine = 0;
+
 RuleEngine::RuleEngine(Player* player) {
 	this->player = player;
 	parser = new RuleParser(this);
 	fitness = 0;
+	id = totalNoOfRuleEngine++;
 }
 
 RuleEngine::~RuleEngine() {
@@ -44,8 +47,13 @@ void RuleEngine::delRulesAdapters() {
 	adapters.clear();
 }
 
+int RuleEngine::getId(){
+	return id;
+}
+
 void RuleEngine::addHistory(char opponentMove){
-	char ownMove = moveHistory.front();
+	char ownMove = moveHistory.back();
+//	cout << "RE calculateFitness " << id << " " << ownMove << endl;
 	if(ownMove == 'R' && opponentMove == 'R'){
 		resultHistory.push_back('D');
 	} else if(ownMove == 'R' && opponentMove == 'P'){
@@ -69,7 +77,7 @@ void RuleEngine::addHistory(char opponentMove){
 }
 
 float RuleEngine::calculateFitness() {
-	char result = resultHistory.front();
+	char result = resultHistory.back();
 	switch(result){
 	case 'W':
 		fitness = (1 - learningFactor)*fitness + learningFactor * 1;
@@ -86,6 +94,7 @@ float RuleEngine::calculateFitness() {
 
 char RuleEngine::nextMove() {
 	char nextMove = parser->nextMove();
+//	cout << "RE " << id << " " << nextMove << endl;
 	moveHistory.push_back(nextMove);
 	return nextMove;
 }

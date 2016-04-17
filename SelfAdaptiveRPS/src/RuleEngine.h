@@ -23,6 +23,7 @@ class Player;
 class RuleEngine {
 	friend class RuleParser;
 public:
+	static int totalNoOfRuleEngine;
 	RuleEngine(Player* player);
 	virtual ~RuleEngine();
 	void delRulesAdapters();
@@ -39,6 +40,7 @@ public:
 	float calculateFitness();
 	float getFitness();
 	Player* getPlayer();
+	int getId();
 
 protected:
 	Player* player;
@@ -48,6 +50,7 @@ protected:
 	list<char> resultHistory;
 	list<char> moveHistory;
 	float fitness;
+	int id;
 
 	void actionAddRule(Rule *adapterRule);
 	void actionDeleteRule(Rule *adapterRule);

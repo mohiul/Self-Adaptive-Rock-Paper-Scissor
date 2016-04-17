@@ -34,6 +34,7 @@ Player::~Player() {
 
 bool compare_ruleEngine (RuleEngine* first, RuleEngine* second)
 {
+//	cout << first->getFitness() << " ";
   return ( first->getFitness() > second->getFitness() );
 }
 
@@ -78,7 +79,16 @@ void Player::evolve() {
 
 char Player::nextMove() {
 	bestRuleEngine = getBestRuleEngine();
-	return bestRuleEngine->nextMove();
+	list<RuleEngine*>::const_iterator iterator;
+	char nextMove = 0;
+	for (iterator = ruleEngines.begin(); iterator != ruleEngines.end(); ++iterator) {
+		 char ch = (*iterator)->nextMove();
+		if((*iterator)->getId() == bestRuleEngine->getId()){
+//			cout << name << ": bestRuleEngine->getId(): " << bestRuleEngine->getId() << endl;
+			nextMove = ch;
+		}
+	}
+	return nextMove;
 }
 
 RuleEngine* Player::getBestRuleEngine(){
@@ -87,6 +97,7 @@ RuleEngine* Player::getBestRuleEngine(){
 
 	list<RuleEngine*> bestFitnessEngines;
 	float bestFitness = ruleEngines.front()->getFitness();
+//	cout << " bestFitness: " << bestFitness << endl;
 	list<RuleEngine*>::const_iterator iterator;
 	for (iterator = ruleEngines.begin(); iterator != ruleEngines.end(); ++iterator) {
 		RuleEngine* engine = *iterator;
@@ -180,7 +191,7 @@ void Player::addHistory(char ownMove, char opponentMove){
 }
 
 float Player::calculateFitness() {
-	char result = resultHistory.front();
+	char result = resultHistory.back();
 	switch(result){
 	case 'W':
 		fitness = (1 - learningFactor)*fitness + learningFactor * 1;

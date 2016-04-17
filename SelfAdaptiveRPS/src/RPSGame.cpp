@@ -54,9 +54,9 @@ void RPSGame::updateTextBoxes(char p1Move, char p2Move) {
 	historyTextBox->set_text(oss.str().c_str());
 
 //	Console print
-//	std::cout << "Itr " << gameIteration << ": " << player1->getName() << ": "
-//			<< p1Move << " " << player2->getName() << ": " << p2Move
-//			<< std::endl;
+	std::cout << "Itr " << gameIteration << ": " << player1->getName() << ": "
+			<< p1Move << " " << player2->getName() << ": " << p2Move
+			<< std::endl;
 
 	oss.str("");
 	oss.clear();
@@ -135,7 +135,6 @@ void RPSGame::play(int noOfGame) {
 //		player2->selfAdapt();
 		updateTextBoxes(p1Move, p2Move);
 	}
-	cout << "Using Rule Count: " << ((float)usingRuleCount/noOfGame)*100 << " %" << endl;
 	player1->printHistory();
 	player2->printHistory();
 

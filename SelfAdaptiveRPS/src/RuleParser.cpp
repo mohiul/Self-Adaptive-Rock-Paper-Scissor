@@ -135,7 +135,7 @@ char RuleParser::nextMove() {
 		if(historyListSize == 0){
 			moveToReturn = nextRandomMove();
 		} else {
-			moveToReturn = ruleEngine->player->moveHistory.front();
+			moveToReturn = ruleEngine->player->moveHistory.back();
 		}
 	} else {
 //		player->printRuleList(matchedRules);
@@ -145,7 +145,6 @@ char RuleParser::nextMove() {
 //		player->printRuleList(matchedRules);
 		Rule *rule = matchedRules.front();
 //		cout << "Using Rule : " << rule->getDetailString() << endl;
-		usingRuleCount++;
 		moveToReturn = rule->getAction();
 	}
 	return moveToReturn;

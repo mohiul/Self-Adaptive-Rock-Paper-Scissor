@@ -31,8 +31,10 @@ GLUI *glui;
 GLUI_EditText *initFile;
 GLUI_TextBox *resultTextBox;
 GLUI_TextBox *historyTextBox;
-GLUI_TextBox *rulesTextBox;
-GLUI_TextBox *actionTextBox;
+GLUI_TextBox *p1RulesTextBox;
+GLUI_TextBox *p2RulesTextBox;
+GLUI_TextBox *p1ActionTextBox;
+GLUI_TextBox *p2ActionTextBox;
 GLUI_Spinner *iterationSpnr;
 GLUI_Spinner *noOfRuleEngineSpnr;
 GLUI_Spinner *noOfRulesPerEngineSpnr;
@@ -49,6 +51,7 @@ GLUI_Button *ctlExit;
 GLUI_Button *ctlRock;
 GLUI_Button *ctlPaper;
 GLUI_Button *ctlScissor;
+GLUI_Checkbox *updateTextCheck;
 
 int radioSelection = EXPERIMENT;
 int noOfRuleEngine = 100;
@@ -59,6 +62,8 @@ float learningFactor = 0.01;
 float parentSelection = 0.8;
 float parentPoolWithReplacement = 0.2;
 float mutationRate = 0.5;
+int updateTextBoxesCheck = 1;
+int updateTextBoxesId;
 
 static bool paused = false;
 
@@ -71,8 +76,10 @@ void exit() {
 
 void clear(){
 	historyTextBox->set_text("");
-	rulesTextBox->set_text("");
-	actionTextBox->set_text("");
+	p1RulesTextBox->set_text("");
+	p2RulesTextBox->set_text("");
+	p1ActionTextBox->set_text("");
+	p2ActionTextBox->set_text("");
 	if(rpsGame != NULL){
 		rpsGame->~RPSGame();
 		rpsGame = NULL;
@@ -136,6 +143,10 @@ void pause() {
         glutIdleFunc(0);
     }
     paused = !paused;
+}
+
+void updateCheck(int key)
+{
 }
 
 /**
@@ -203,6 +214,7 @@ int main(int argc, char** argv)
     ctlPaper->disable();
     ctlScissor = glui->add_button_to_panel(playPanel, "Scissor", SCISSOR_BTN, control);
     ctlScissor->disable();
+//    glui->add_column_to_panel(controlPanel);
 
     GLUI_Panel *experimentPanel = glui->add_panel_to_panel(controlPanel, "Experiment");
     ctlStart = glui->add_button_to_panel(experimentPanel, "Start", START_BTN, control);
@@ -211,33 +223,36 @@ int main(int argc, char** argv)
     ctlStop->disable();
     ctlExit = glui->add_button_to_panel(experimentPanel, "Exit", EXIT_BTN, control);
 
-    initFile = glui->add_edittext_to_panel(controlPanel, "Rule Init File ", GLUI_EDITTEXT_TEXT);
+    GLUI_Panel *initPanel = glui->add_panel_to_panel(controlPanel, "Initialization");
+    updateTextCheck = glui->add_checkbox_to_panel(initPanel, "Update Text Boxes", &updateTextBoxesCheck, updateTextBoxesId, updateCheck);
+    initFile = glui->add_edittext_to_panel(initPanel, "Rule Init File ", GLUI_EDITTEXT_TEXT);
     initFile->set_w(200);
     initFile->enable();
     initFile->set_text("initialconfig.xml");
 
-    noOfRuleEngineSpnr = new GLUI_Spinner( controlPanel, "No of Rule Engine:", &noOfRuleEngine);
+    GLUI_Panel *paramPanel = glui->add_panel_to_panel(controlPanel, "Parameters");
+    noOfRuleEngineSpnr = new GLUI_Spinner( paramPanel, "No of Rule Engine:", &noOfRuleEngine);
     noOfRuleEngineSpnr->set_int_limits( 1, 1000 );
 
-    noOfRulesPerEngineSpnr = new GLUI_Spinner( controlPanel, "No of Rules per Engine:", &noOfRulesPerEngine);
+    noOfRulesPerEngineSpnr = new GLUI_Spinner( paramPanel, "No of Rules per Engine:", &noOfRulesPerEngine);
     noOfRulesPerEngineSpnr->set_int_limits( 1, 1000 );
 
-    iterationSpnr = new GLUI_Spinner( controlPanel, "Iterations:", &iterations);
+    iterationSpnr = new GLUI_Spinner( paramPanel, "Iterations:", &iterations);
     iterationSpnr->set_int_limits( 2, 10000 );
 
-    noOfGamePlaySpnr = new GLUI_Spinner( controlPanel, "No of Game Play:", &noOfGamePlay);
+    noOfGamePlaySpnr = new GLUI_Spinner( paramPanel, "No of Game Play:", &noOfGamePlay);
     noOfGamePlaySpnr->set_int_limits( 1, 500 );
 
-    learningFactorSpnr = new GLUI_Spinner( controlPanel, "Learning Factor:", &learningFactor);
+    learningFactorSpnr = new GLUI_Spinner( paramPanel, "Learning Factor:", &learningFactor);
     learningFactorSpnr->set_float_limits( 0.001, 1.0 );
 
-    parentSelectionSpnr = new GLUI_Spinner( controlPanel, "Parent Selection:", &parentSelection);
+    parentSelectionSpnr = new GLUI_Spinner( paramPanel, "Parent Selection:", &parentSelection);
     parentSelectionSpnr->set_float_limits( 0.0, 1.0 );
 
-    parentPoolWithReplaceSpnr = new GLUI_Spinner( controlPanel, "Parent Replacement:", &parentPoolWithReplacement);
+    parentPoolWithReplaceSpnr = new GLUI_Spinner( paramPanel, "Parent Replacement:", &parentPoolWithReplacement);
     parentPoolWithReplaceSpnr->set_float_limits( 0.0, 1.0 );
 
-    mutationRateSpnr = new GLUI_Spinner( controlPanel, "Mutation Rate:", &mutationRate);
+    mutationRateSpnr = new GLUI_Spinner( paramPanel, "Mutation Rate:", &mutationRate);
     mutationRateSpnr->set_float_limits( 0.1, 1.0 );
 
     glui->add_column(false);
@@ -253,15 +268,28 @@ int main(int argc, char** argv)
     historyTextBox->set_w(textbox_width);
     glui->add_column(false);
 
-    GLUI_Panel *rulesPanel = glui->add_panel("Rules");
-    rulesTextBox = new GLUI_TextBox(rulesPanel,true,1,control);
-    rulesTextBox->set_h(textbox_height);
-    rulesTextBox->set_w(textbox_width);
+    GLUI_Panel *p1RulesPanel = glui->add_panel("Player 1 Rules");
+    p1RulesTextBox = new GLUI_TextBox(p1RulesPanel,true,1,control);
+    p1RulesTextBox->set_h(textbox_height);
+    p1RulesTextBox->set_w(textbox_width);
+//    glui->add_column(false);
 
-    GLUI_Panel *actionPanel = glui->add_panel("Adapters");
-    actionTextBox = new GLUI_TextBox(actionPanel,true,1,control);
-    actionTextBox->set_h(textbox_height);
-    actionTextBox->set_w(textbox_width);
+    GLUI_Panel *p1ActionPanel = glui->add_panel("Player 1 Adapters");
+    p1ActionTextBox = new GLUI_TextBox(p1ActionPanel,true,1,control);
+    p1ActionTextBox->set_h(textbox_height);
+    p1ActionTextBox->set_w(textbox_width);
+    glui->add_column(false);
+
+    GLUI_Panel *p2RulesPanel = glui->add_panel("Player 2 Rules");
+    p2RulesTextBox = new GLUI_TextBox(p2RulesPanel,true,1,control);
+    p2RulesTextBox->set_h(textbox_height);
+    p2RulesTextBox->set_w(textbox_width);
+//    glui->add_column(false);
+
+    GLUI_Panel *p2ActionPanel = glui->add_panel("Player 2 Adapters");
+    p2ActionTextBox = new GLUI_TextBox(p2ActionPanel,true,1,control);
+    p2ActionTextBox->set_h(textbox_height);
+    p2ActionTextBox->set_w(textbox_width);
 
 	/* display callback invoked when window opened */
 	glutMainLoop(); /* enter event loop */

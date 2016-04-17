@@ -56,24 +56,30 @@ void RPSGame::updateTextBoxes(char p1Move, char p2Move) {
 	historyTextBox->set_text(oss.str().c_str());
 
 //	Console print
-	std::cout << "Itr " << gameIteration << ": " << player1->getName() << ": "
-			<< p1Move << " " << player2->getName() << ": " << p2Move
-			<< std::endl;
+//	std::cout << "Itr " << gameIteration << ": " << player1->getName() << ": "
+//			<< p1Move << " " << player2->getName() << ": " << p2Move
+//			<< std::endl;
 
 	oss.str("");
 	oss.clear();
 	oss << printRules(player1);
-	if(radioSelection == EXPERIMENT){
-		oss << printRules(player2);
-	}
-	rulesTextBox->set_text(oss.str().c_str());
+	p1RulesTextBox->set_text(oss.str().c_str());
 	oss.str("");
 	oss.clear();
-	oss << printAdapters(player1);
 	if(radioSelection == EXPERIMENT){
-		oss << printAdapters(player2);
+		oss << printRules(player2);
+		p2RulesTextBox->set_text(oss.str().c_str());
+		oss.str("");
+		oss.clear();
 	}
-	actionTextBox->set_text(oss.str().c_str());
+	oss << printAdapters(player1);
+	p1ActionTextBox->set_text(oss.str().c_str());
+	if(radioSelection == EXPERIMENT){
+		oss.str("");
+		oss.clear();
+		oss << printAdapters(player2);
+		p2ActionTextBox->set_text(oss.str().c_str());
+	}
 }
 
 char RPSGame::getMoveFromEnum(Move move){
@@ -105,7 +111,9 @@ void RPSGame::playOneMove(Move move) {
 	player1->addHistory(p1Move, p2Move);
 	player2->addHistory(p2Move, p1Move);
 
-	updateTextBoxes(p1Move, p2Move);
+	if(updateTextBoxesCheck){
+		updateTextBoxes(p1Move, p2Move);
+	}
 
 	player1->printHistory();
 	player2->printHistory();
@@ -132,7 +140,9 @@ bool RPSGame::play() {
 //		player2->adapt();
 //		player1->selfAdapt();
 //		player2->selfAdapt();
-	updateTextBoxes(p1Move, p2Move);
+	if(updateTextBoxesCheck){
+		updateTextBoxes(p1Move, p2Move);
+	}
 	gameIteration++;
 	return true;
 }
@@ -140,7 +150,7 @@ bool RPSGame::play() {
 std::string RPSGame::printRules(Player *player) {
     std::ostringstream oss;
 	std::list<Rule*> rules = player->getRules();
-	oss << "Player "<< player->getName() << " rules:\n";
+//	oss << "Player "<< player->getName() << " rules:\n";
 	std::list<Rule*>::const_iterator iterator;
 	int r = 1;
 	for (iterator = rules.begin(); iterator != rules.end(); ++iterator) {
@@ -154,7 +164,7 @@ std::string RPSGame::printRules(Player *player) {
 std::string RPSGame::printAdapters(Player *player) {
     std::ostringstream oss;
 	std::list<Adapter*> adapters = player->getAdapters();
-	oss << "Player "<< player->getName() << " adapters:\n";
+//	oss << "Player "<< player->getName() << " adapters:\n";
 	std::list<Adapter*>::const_iterator iterator;
 	int a = 1;
 	for (iterator = adapters.begin(); iterator != adapters.end(); ++iterator) {

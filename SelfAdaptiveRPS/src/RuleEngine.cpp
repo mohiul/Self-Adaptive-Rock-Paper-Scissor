@@ -50,6 +50,9 @@ void RuleEngine::delRulesAdapters() {
 int RuleEngine::getId(){
 	return id;
 }
+void RuleEngine::setFitness(int newFitness){
+	fitness = newFitness;
+}
 
 void RuleEngine::addHistory(char opponentMove){
 	char ownMove = moveHistory.back();

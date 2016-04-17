@@ -41,6 +41,7 @@ public:
 	float getFitness();
 	Player* getPlayer();
 	int getId();
+	void setFitness(int newFitness);
 
 protected:
 	Player* player;

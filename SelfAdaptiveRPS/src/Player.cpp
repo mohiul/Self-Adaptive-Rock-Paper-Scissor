@@ -64,6 +64,7 @@ void Player::evolve() {
 //		cout << "eliteParentPoolSize: " << eliteParentPoolSize << endl;
 		for (iterator = parentRuleEngines.begin(), i = 0; iterator != parentRuleEngines.end() && i < eliteParentPoolSize; ++iterator, ++i) {
 			if(i < eliteParentPoolSize){
+				(*iterator)->setFitness(0);
 				ruleEngines.push_back(*iterator);
 			} else {
 				(*iterator)->~RuleEngine();

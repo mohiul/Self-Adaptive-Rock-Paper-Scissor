@@ -50,7 +50,7 @@ public:
 	list<Adapter*> getAdapters();
 	char nextMove();
 	void addRuleEngine(RuleEngine* engine);
-	RuleEngine* getBestRuleEngine();
+	RuleEngine* getBestRuleEngine(list<RuleEngine*> ruleEngines);
 	void evolve();
 	float getFitness();
 	float getAvgFitness();

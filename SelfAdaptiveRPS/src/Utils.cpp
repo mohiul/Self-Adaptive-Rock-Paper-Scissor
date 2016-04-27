@@ -57,3 +57,20 @@ void Utils::printHistory(std::string name, std::list<char> history){
 	}
 	std::cout << std::endl;
 }
+
+char Utils::nextRandomMove() {
+	char moveToReturn = 0;
+	int newRandomNum = rand() % 3;
+	switch (newRandomNum) {
+	case 0:
+		moveToReturn = 'R';
+		break;
+	case 1:
+		moveToReturn = 'P';
+		break;
+	case 2:
+		moveToReturn = 'S';
+		break;
+	}
+	return moveToReturn;
+}

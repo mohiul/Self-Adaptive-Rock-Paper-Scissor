@@ -20,6 +20,7 @@ public:
 	static char *convertListToArray(std::list<char> listToConvert);
 	static std::list<char> convertStrToList(std::string strToConvert);
 	static void printHistory(std::string name, std::list<char> history);
+	static char nextRandomMove();
 };
 
 #endif /* UTILS_H_ */

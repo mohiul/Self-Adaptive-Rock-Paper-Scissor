@@ -55,28 +55,30 @@ void RuleEngine::setFitness(int newFitness){
 }
 
 void RuleEngine::addHistory(char opponentMove){
-	char ownMove = moveHistory.back();
-//	cout << "RE calculateFitness " << id << " " << ownMove << endl;
-	if(ownMove == 'R' && opponentMove == 'R'){
-		resultHistory.push_back('D');
-	} else if(ownMove == 'R' && opponentMove == 'P'){
-		resultHistory.push_back('L');
-	} else if(ownMove == 'R' && opponentMove == 'S'){
-		resultHistory.push_back('W');
-	} else if(ownMove == 'P' && opponentMove == 'R'){
-		resultHistory.push_back('W');
-	} else if(ownMove == 'P' && opponentMove == 'P'){
-		resultHistory.push_back('D');
-	} else if(ownMove == 'P' && opponentMove == 'S'){
-		resultHistory.push_back('L');
-	} else if(ownMove == 'S' && opponentMove == 'R'){
-		resultHistory.push_back('L');
-	} else if(ownMove == 'S' && opponentMove == 'P'){
-		resultHistory.push_back('W');
-	} else if(ownMove == 'S' && opponentMove == 'S'){
-		resultHistory.push_back('D');
+	if(moveHistory.size() > 0){
+		char ownMove = moveHistory.back();
+	//	cout << "RE calculateFitness " << id << " " << ownMove << endl;
+		if(ownMove == 'R' && opponentMove == 'R'){
+			resultHistory.push_back('D');
+		} else if(ownMove == 'R' && opponentMove == 'P'){
+			resultHistory.push_back('L');
+		} else if(ownMove == 'R' && opponentMove == 'S'){
+			resultHistory.push_back('W');
+		} else if(ownMove == 'P' && opponentMove == 'R'){
+			resultHistory.push_back('W');
+		} else if(ownMove == 'P' && opponentMove == 'P'){
+			resultHistory.push_back('D');
+		} else if(ownMove == 'P' && opponentMove == 'S'){
+			resultHistory.push_back('L');
+		} else if(ownMove == 'S' && opponentMove == 'R'){
+			resultHistory.push_back('L');
+		} else if(ownMove == 'S' && opponentMove == 'P'){
+			resultHistory.push_back('W');
+		} else if(ownMove == 'S' && opponentMove == 'S'){
+			resultHistory.push_back('D');
+		}
+		calculateFitness();
 	}
-	calculateFitness();
 }
 
 float RuleEngine::calculateFitness() {
@@ -98,7 +100,9 @@ float RuleEngine::calculateFitness() {
 char RuleEngine::nextMove() {
 	char nextMove = parser->nextMove();
 //	cout << "RE " << id << " " << nextMove << endl;
-	moveHistory.push_back(nextMove);
+	if(nextMove > 0){
+		moveHistory.push_back(nextMove);
+	}
 	return nextMove;
 }
 

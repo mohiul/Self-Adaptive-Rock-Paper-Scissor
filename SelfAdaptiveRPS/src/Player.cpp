@@ -34,7 +34,6 @@ Player::~Player() {
 
 bool compare_ruleEngine (RuleEngine* first, RuleEngine* second)
 {
-//	cout << first->getFitness() << " ";
   return ( first->getFitness() > second->getFitness() );
 }
 
@@ -62,6 +61,7 @@ void Player::evolve() {
 		parentRuleEngines.sort(compare_ruleEngine);
 		int eliteParentPoolSize = ruleEngineSize*parentPoolWithReplacement;
 //		cout << "eliteParentPoolSize: " << eliteParentPoolSize << endl;
+//		cout << "parentRuleEngines.size(): " << parentRuleEngines.size() << endl;
 		for (iterator = parentRuleEngines.begin(), i = 0; iterator != parentRuleEngines.end() && i < eliteParentPoolSize; ++iterator, ++i) {
 			if(i < eliteParentPoolSize){
 				if(initParentFitCheckVal){
@@ -77,6 +77,7 @@ void Player::evolve() {
 		for (iterator = childrenList.begin(); iterator != childrenList.end(); ++iterator) {
 			ruleEngines.push_back(*iterator);
 		}
+//		cout << "ruleEngines.size(): " << ruleEngines.size() << endl;
 	}
 }
 
@@ -88,31 +89,41 @@ void Player::adapt() {
 }
 
 char Player::nextMove() {
-	bestRuleEngine = getBestRuleEngine();
+//	cout << "Name: " << name << " Player::nextMove()" << endl;
 	list<RuleEngine*>::const_iterator iterator;
 	char nextMove = 0;
+	list<RuleEngine*> ruleEnginesWithMove;
 	for (iterator = ruleEngines.begin(); iterator != ruleEngines.end(); ++iterator) {
 		char ch = (*iterator)->nextMove();
-		if((*iterator)->getId() == bestRuleEngine->getId()){
-//			cout << name << ": bestRuleEngine->getId(): " << bestRuleEngine->getId() << endl;
-			nextMove = ch;
+		if(ch != 0){
+			ruleEnginesWithMove.push_back((*iterator));
 		}
 	}
+
+	if(ruleEnginesWithMove.size() > 0){
+		bestRuleEngine = getBestRuleEngine(ruleEnginesWithMove);
+		if(bestRuleEngine->getMoveHistory().size() > 0){
+			nextMove = bestRuleEngine->getMoveHistory().back();
+		}
+	} else {
+		bestRuleEngine = NULL;
+	}
+
 	if(nextMove == 0){
-		cerr << "nextMove cannot be zero!!" << endl;
+		nextMove = Utils::nextRandomMove();
 	}
 	return nextMove;
 }
 
-RuleEngine* Player::getBestRuleEngine(){
+RuleEngine* Player::getBestRuleEngine(list<RuleEngine*> ruleEngineList){
 
-	ruleEngines.sort(compare_ruleEngine);
+	ruleEngineList.sort(compare_ruleEngine);
 
 	list<RuleEngine*> bestFitnessEngines;
-	float bestFitness = ruleEngines.front()->getFitness();
+	float bestFitness = ruleEngineList.front()->getFitness();
 //	cout << " bestFitness: " << bestFitness << endl;
 	list<RuleEngine*>::const_iterator iterator;
-	for (iterator = ruleEngines.begin(); iterator != ruleEngines.end(); ++iterator) {
+	for (iterator = ruleEngineList.begin(); iterator != ruleEngineList.end(); ++iterator) {
 		RuleEngine* engine = *iterator;
 		if(engine->getFitness() == bestFitness){
 			bestFitnessEngines.push_back(engine);

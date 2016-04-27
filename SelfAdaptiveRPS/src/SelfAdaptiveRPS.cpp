@@ -56,9 +56,9 @@ GLUI_Checkbox *applyAdaptationCheck;
 GLUI_Checkbox *initParentFitCheck;
 
 int radioSelection = EXPERIMENT;
-int noOfRuleEngine = 5;
-int noOfRulesPerEngine = 10;
-int iterations = 30;
+int noOfRuleEngine = 100;
+int noOfRulesPerEngine = 100;
+int iterations = 100;
 int noOfGamePlay = 10;
 float learningFactor = 0.01;
 float parentSelection = 0.8;

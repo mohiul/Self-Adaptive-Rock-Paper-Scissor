@@ -28,6 +28,7 @@ list<RuleEngine*> Evolution::evolve(list<RuleEngine*> parentList) {
 	int mutatationVal = mutationRate * 10;
 	int mutationRand = rand() % 10 + 1;
 	for (iterator = parentList.begin(); iterator != parentList.end(); ++iterator) {
+//		cout << "I am here: Evolution::evolve()!" << endl;
 		RuleEngine* engine1 = *iterator;
 		++iterator;
 		if(iterator == parentList.end()){

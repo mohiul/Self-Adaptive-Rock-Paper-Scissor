@@ -101,7 +101,7 @@ char RPSGame::getMoveFromEnum(Move move){
 }
 
 void RPSGame::playOneMove(Move move) {
-	if(gameIteration % noOfGamePlay == 0){
+	if(gameIteration > 0 && gameIteration % noOfGamePlay == 0){
 		avgFitnessFile << gameIteration << ", " << player1->getAvgFitness() << ", " << player2->getAvgFitness() << endl;
 		if(applyAdaptCheckValue){
 			player1->bestRuleEngine->adapt();
@@ -132,7 +132,7 @@ bool RPSGame::play() {
 		player2->printHistory(gameIteration);
 		return false;
 	}
-	if(gameIteration % noOfGamePlay == 0){
+	if(gameIteration > 0 && gameIteration % noOfGamePlay == 0){
 		avgFitnessFile << gameIteration << ", " << player1->getAvgFitness() << ", " << player2->getAvgFitness() << endl;
 		if(applyAdaptCheckValue){
 			player1->adapt();
@@ -157,29 +157,33 @@ bool RPSGame::play() {
 
 std::string RPSGame::printRules(Player *player) {
     std::ostringstream oss;
-	std::list<Rule*> rules = player->getRules();
-//	oss << "Player "<< player->getName() << " rules:\n";
-	std::list<Rule*>::const_iterator iterator;
-	int r = 1;
-	for (iterator = rules.begin(); iterator != rules.end(); ++iterator) {
-		Rule* rule = *iterator;
-		oss << r << ": " << rule->getString() << "\n";
-		r++;
-	}
+    if(player->bestRuleEngine != NULL){
+		std::list<Rule*> rules = player->getRules();
+	//	oss << "Player "<< player->getName() << " rules:\n";
+		std::list<Rule*>::const_iterator iterator;
+		int r = 1;
+		for (iterator = rules.begin(); iterator != rules.end(); ++iterator) {
+			Rule* rule = *iterator;
+			oss << r << ": " << rule->getString() << "\n";
+			r++;
+		}
+    }
 	return oss.str();
 }
 
 std::string RPSGame::printAdapters(Player *player) {
     std::ostringstream oss;
-	std::list<Adapter*> adapters = player->getAdapters();
-//	oss << "Player "<< player->getName() << " adapters:\n";
-	std::list<Adapter*>::const_iterator iterator;
-	int a = 1;
-	for (iterator = adapters.begin(); iterator != adapters.end(); ++iterator) {
-		Adapter* adapter = *iterator;
-		oss << a << ": " << adapter->getString() << "\n";
-		a++;
-	}
+    if(player->bestRuleEngine != NULL){
+		std::list<Adapter*> adapters = player->getAdapters();
+	//	oss << "Player "<< player->getName() << " adapters:\n";
+		std::list<Adapter*>::const_iterator iterator;
+		int a = 1;
+		for (iterator = adapters.begin(); iterator != adapters.end(); ++iterator) {
+			Adapter* adapter = *iterator;
+			oss << a << ": " << adapter->getString() << "\n";
+			a++;
+		}
+    }
 	return oss.str();
 }
 

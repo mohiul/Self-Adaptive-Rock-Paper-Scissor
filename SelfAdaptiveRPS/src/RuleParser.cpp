@@ -132,9 +132,9 @@ char RuleParser::nextMove() {
 		}
 	}
 	if(matchedRules.size() == 0){
-		if(ruleEngine->moveHistory.size() == 0){
-			moveToReturn = nextRandomMove();
-		} else {
+		if(ruleEngine->moveHistory.size() > 0){
+//			moveToReturn = nextRandomMove();
+//		} else {
 //			moveToReturn = ruleEngine->player->moveHistory.back();
 			moveToReturn = ruleEngine->moveHistory.back();
 //			cout << "RE " << ruleEngine->id << " moveToReturn:" << moveToReturn << endl;
@@ -148,23 +148,6 @@ char RuleParser::nextMove() {
 		Rule *rule = matchedRules.front();
 //		cout << "Using Rule : " << rule->getDetailString() << endl;
 		moveToReturn = rule->getAction();
-	}
-	return moveToReturn;
-}
-
-char RuleParser::nextRandomMove() {
-	char moveToReturn = 0;
-	int newRandomNum = rand() % 3;
-	switch (newRandomNum) {
-	case 0:
-		moveToReturn = 'R';
-		break;
-	case 1:
-		moveToReturn = 'P';
-		break;
-	case 2:
-		moveToReturn = 'S';
-		break;
 	}
 	return moveToReturn;
 }

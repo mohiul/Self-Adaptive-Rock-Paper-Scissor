@@ -64,7 +64,9 @@ void Player::evolve() {
 //		cout << "eliteParentPoolSize: " << eliteParentPoolSize << endl;
 		for (iterator = parentRuleEngines.begin(), i = 0; iterator != parentRuleEngines.end() && i < eliteParentPoolSize; ++iterator, ++i) {
 			if(i < eliteParentPoolSize){
-				(*iterator)->setFitness(0);
+				if(initParentFitCheckVal){
+					(*iterator)->setFitness(0);
+				}
 				ruleEngines.push_back(*iterator);
 			} else {
 				(*iterator)->~RuleEngine();
@@ -78,16 +80,26 @@ void Player::evolve() {
 	}
 }
 
+void Player::adapt() {
+	list<RuleEngine*>::const_iterator iterator;
+	for (iterator = ruleEngines.begin(); iterator != ruleEngines.end(); ++iterator) {
+		 (*iterator)->adapt();
+	}
+}
+
 char Player::nextMove() {
 	bestRuleEngine = getBestRuleEngine();
 	list<RuleEngine*>::const_iterator iterator;
 	char nextMove = 0;
 	for (iterator = ruleEngines.begin(); iterator != ruleEngines.end(); ++iterator) {
-		 char ch = (*iterator)->nextMove();
+		char ch = (*iterator)->nextMove();
 		if((*iterator)->getId() == bestRuleEngine->getId()){
 //			cout << name << ": bestRuleEngine->getId(): " << bestRuleEngine->getId() << endl;
 			nextMove = ch;
 		}
+	}
+	if(nextMove == 0){
+		cerr << "nextMove cannot be zero!!" << endl;
 	}
 	return nextMove;
 }
@@ -185,6 +197,8 @@ void Player::addHistory(char ownMove, char opponentMove){
 		gameResult = '5';
 		drawCount++;
 		resultHistory.push_back('D');
+	} else {
+		cerr << "Cannot happen ownMove: " << ownMove << " opponentMove: " << opponentMove << endl;
 	}
 //	cout << "Player: " << name << " Adding history: " << gameResult << endl;
 	history.push_back(gameResult);
@@ -253,9 +267,9 @@ string Player::getCurrentHistoryStr(bool flipStr){
 	return oss.str();
 }
 
-void Player::printHistory(){
+void Player::printHistory(int gameIteration){
 	list<char>::const_iterator iterator;
-	cout << name << " history: ";
+	cout << name << " game: " << gameIteration << " history: ";
 	for (iterator = history.begin(); iterator != history.end(); ++iterator) {
 	    cout << " " << *iterator;
 	}

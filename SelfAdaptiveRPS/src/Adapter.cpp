@@ -6,6 +6,7 @@
  */
 
 #include <sstream>
+#include <cstdlib>
 #include "Adapter.h"
 
 Adapter::Adapter(Rule *rule) {
@@ -27,6 +28,26 @@ std::list<Action> Adapter::getActions(){
 
 Rule *Adapter::getRule(){
 	return rule;
+}
+
+Adapter* Adapter::generateAdapter() {
+	Adapter *adapter = new Adapter(Rule::generateRule());
+	int randNum = rand() % 2;
+	switch(randNum){
+	case 0:
+		adapter->addAction(ADD);
+		break;
+	case 1:
+		adapter->addAction(DEL);
+		break;
+	case 2:
+		adapter->addAction(MOD);
+		break;
+	case 3:
+		adapter->addAction(SHF);
+		break;
+	}
+	return adapter;
 }
 
 std::string Adapter::getString() {

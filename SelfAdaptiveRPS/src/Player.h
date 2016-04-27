@@ -42,7 +42,7 @@ public:
 	int getLoose();
 	int getDraw();
 	void addHistory(char ownMove, char opponentMove);
-	void printHistory();
+	void printHistory(int gameIteration);
 	void printHistory(list<char> history);
 	string getEntireHistoryStr();
 	string getCurrentHistoryStr(bool flipStr);
@@ -54,6 +54,7 @@ public:
 	void evolve();
 	float getFitness();
 	float getAvgFitness();
+	void adapt();
 };
 
 #endif /* PLAYER_H_ */

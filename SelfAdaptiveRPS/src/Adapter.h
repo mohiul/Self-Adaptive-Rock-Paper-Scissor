@@ -31,6 +31,7 @@ public:
 	std::list<Action> getActions();
 	Rule *getRule();
 	std::string getString();
+	static Adapter* generateAdapter();
 };
 
 #endif /* ADAPTER_H_ */

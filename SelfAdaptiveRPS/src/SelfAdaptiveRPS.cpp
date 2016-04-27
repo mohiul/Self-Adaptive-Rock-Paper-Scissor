@@ -52,17 +52,21 @@ GLUI_Button *ctlRock;
 GLUI_Button *ctlPaper;
 GLUI_Button *ctlScissor;
 GLUI_Checkbox *updateTextCheck;
+GLUI_Checkbox *applyAdaptationCheck;
+GLUI_Checkbox *initParentFitCheck;
 
 int radioSelection = EXPERIMENT;
-int noOfRuleEngine = 100;
-int noOfRulesPerEngine = 100;
-int iterations = 100;
-int noOfGamePlay = 5;
+int noOfRuleEngine = 5;
+int noOfRulesPerEngine = 10;
+int iterations = 30;
+int noOfGamePlay = 10;
 float learningFactor = 0.01;
 float parentSelection = 0.8;
 float parentPoolWithReplacement = 0.2;
 float mutationRate = 0.5;
+int initParentFitCheckVal = 1;
 int updateTextBoxesCheck = 1;
+int applyAdaptCheckValue = 0;
 int updateTextBoxesId;
 
 static bool paused = false;
@@ -87,6 +91,7 @@ void clear(){
 }
 
 void stop() {
+	glutIdleFunc(0);
 	if(rpsGame != NULL){
 		rpsGame->~RPSGame();
 		rpsGame = NULL;
@@ -225,6 +230,10 @@ int main(int argc, char** argv)
 
     GLUI_Panel *initPanel = glui->add_panel_to_panel(controlPanel, "Initialization");
     updateTextCheck = glui->add_checkbox_to_panel(initPanel, "Update Text Boxes", &updateTextBoxesCheck, updateTextBoxesId, updateCheck);
+
+    applyAdaptationCheck = glui->add_checkbox_to_panel(initPanel, "Apply Adaptation", &applyAdaptCheckValue, updateTextBoxesId, updateCheck);
+
+
     initFile = glui->add_edittext_to_panel(initPanel, "Rule Init File ", GLUI_EDITTEXT_TEXT);
     initFile->set_w(200);
     initFile->enable();
@@ -251,6 +260,8 @@ int main(int argc, char** argv)
 
     parentPoolWithReplaceSpnr = new GLUI_Spinner( paramPanel, "Parent Replacement:", &parentPoolWithReplacement);
     parentPoolWithReplaceSpnr->set_float_limits( 0.0, 1.0 );
+
+    initParentFitCheck = glui->add_checkbox_to_panel(paramPanel, "Initialize parent fitness", &initParentFitCheckVal, updateTextBoxesId, updateCheck);
 
     mutationRateSpnr = new GLUI_Spinner( paramPanel, "Mutation Rate:", &mutationRate);
     mutationRateSpnr->set_float_limits( 0.1, 1.0 );

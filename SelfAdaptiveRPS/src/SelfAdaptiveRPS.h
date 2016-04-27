@@ -56,5 +56,7 @@ extern float parentSelection;
 extern float parentPoolWithReplacement;
 extern float mutationRate;
 extern int updateTextBoxesCheck;
+extern int applyAdaptCheckValue;
+extern int initParentFitCheckVal;
 
 #endif /* SELFADAPTIVERPS_H_ */

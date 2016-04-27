@@ -132,10 +132,12 @@ char RuleParser::nextMove() {
 		}
 	}
 	if(matchedRules.size() == 0){
-		if(historyListSize == 0){
+		if(ruleEngine->moveHistory.size() == 0){
 			moveToReturn = nextRandomMove();
 		} else {
-			moveToReturn = ruleEngine->player->moveHistory.back();
+//			moveToReturn = ruleEngine->player->moveHistory.back();
+			moveToReturn = ruleEngine->moveHistory.back();
+//			cout << "RE " << ruleEngine->id << " moveToReturn:" << moveToReturn << endl;
 		}
 	} else {
 //		player->printRuleList(matchedRules);

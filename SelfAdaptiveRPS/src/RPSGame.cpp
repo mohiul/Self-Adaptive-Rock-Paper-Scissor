@@ -103,8 +103,13 @@ char RPSGame::getMoveFromEnum(Move move){
 void RPSGame::playOneMove(Move move) {
 	if(gameIteration % noOfGamePlay == 0){
 		avgFitnessFile << gameIteration << ", " << player1->getAvgFitness() << ", " << player2->getAvgFitness() << endl;
-		player1->evolve();
-		player2->evolve();
+		if(applyAdaptCheckValue){
+			player1->bestRuleEngine->adapt();
+			player2->bestRuleEngine->adapt();
+		} else {
+			player1->evolve();
+			player2->evolve();
+		}
 	}
 	char p1Move = player1->nextMove();
 	char p2Move = getMoveFromEnum(move);
@@ -115,31 +120,34 @@ void RPSGame::playOneMove(Move move) {
 		updateTextBoxes(p1Move, p2Move);
 	}
 
-	player1->printHistory();
-	player2->printHistory();
+	player1->printHistory(gameIteration);
+	player2->printHistory(gameIteration);
 	printResult();
 	gameIteration++;
 }
 
 bool RPSGame::play() {
 	if(gameIteration >= totalIteration){
-		player1->printHistory();
-		player2->printHistory();
+		player1->printHistory(gameIteration);
+		player2->printHistory(gameIteration);
 		return false;
 	}
 	if(gameIteration % noOfGamePlay == 0){
 		avgFitnessFile << gameIteration << ", " << player1->getAvgFitness() << ", " << player2->getAvgFitness() << endl;
-		player1->evolve();
-		player2->evolve();
+		if(applyAdaptCheckValue){
+			player1->adapt();
+			player2->adapt();
+//			player1->selfAdapt();
+//			player2->selfAdapt();
+		} else {
+			player1->evolve();
+			player2->evolve();
+		}
 	}
 	char p1Move = player1->nextMove();
 	char p2Move = player2->nextMove();
 	player1->addHistory(p1Move, p2Move);
 	player2->addHistory(p2Move, p1Move);
-//		player1->adapt();
-//		player2->adapt();
-//		player1->selfAdapt();
-//		player2->selfAdapt();
 	if(updateTextBoxesCheck){
 		updateTextBoxes(p1Move, p2Move);
 	}
@@ -210,10 +218,14 @@ Player* RPSGame::initRandomPlayer(string name) {
 
 	for(int i = 0; i < noOfRuleEngine; i++){
 		RuleEngine* engine = new RuleEngine(player);
-		int noOfRules = rand() % noOfRulesPerEngine + 1;
+//		int noOfRules = rand() % noOfRulesPerEngine + 1;
 
-		for(int i = 0; i < noOfRules; i++){
+//		for(int i = 0; i < noOfRules; i++){
+		for(int i = 0; i < noOfRulesPerEngine; i++){
 			engine->addRule(Rule::generateRule());
+			if(applyAdaptCheckValue){
+				engine->addAdapter(Adapter::generateAdapter());
+			}
 		}
 		player->addRuleEngine(engine);
 	}

@@ -18,6 +18,7 @@ Rule::Rule(string condition, char action) {
 	this->action = action;
 	howRecent = 0;
 	specifcity = 0;
+	fitness = 0;
 	for(unsigned int i = 0; i < condition.length(); i++){
 		if(condition.at(i) == '?'){
 			specifcity -= 9*(int)toDigit(condition.at(++i));
@@ -57,7 +58,7 @@ string Rule::getString() {
 
 string Rule::getDetailString() {
 	ostringstream oss;
-	oss << condition << ":" << action << " specificity: " << specifcity << " how recent: " << howRecent;
+	oss << condition << ":" << action << " specificity: " << specifcity << " how recent: " << howRecent << " fitness: " << fitness;
 	return oss.str();
 }
 
@@ -375,7 +376,27 @@ Rule* Rule::mutate() {
 	char ch = '0' + rand() % 9;
 	ss << ch;
 	condition.replace(randNum, 1, ss.str());
+	fitness = 0;
 	return this;
+}
+
+float Rule::calculateFitness(char result) {
+	switch(result){
+	case 'W':
+		fitness = (1 - learningFactor)*fitness + learningFactor * 1;
+		break;
+	case 'D':
+		fitness = (1 - learningFactor)*fitness + learningFactor * 0;
+		break;
+	case 'L':
+		fitness = (1 - learningFactor)*fitness + learningFactor * (-1);
+		break;
+	}
+	return fitness;
+}
+
+float Rule::getFitness(){
+	return fitness;
 }
 
 /*

@@ -54,11 +54,13 @@ GLUI_Button *ctlScissor;
 GLUI_Checkbox *updateTextCheck;
 GLUI_Checkbox *applyAdaptationCheck;
 GLUI_Checkbox *initParentFitCheck;
+GLUI_Checkbox *ruleFitnessCheck;
+GLUI_Checkbox *ruleEngPlayByLastMoveCheck;
 
 int radioSelection = EXPERIMENT;
 int noOfRuleEngine = 100;
 int noOfRulesPerEngine = 100;
-int iterations = 100;
+int iterations = 500;
 int noOfGamePlay = 10;
 float learningFactor = 0.01;
 float parentSelection = 0.8;
@@ -67,6 +69,8 @@ float mutationRate = 0.5;
 int initParentFitCheckVal = 1;
 int updateTextBoxesCheck = 1;
 int applyAdaptCheckValue = 0;
+int calculateRuleFitness = 1;
+int ruleEngPlayByLastMove = 0;
 int updateTextBoxesId;
 
 static bool paused = false;
@@ -254,6 +258,8 @@ int main(int argc, char** argv)
 
     learningFactorSpnr = new GLUI_Spinner( paramPanel, "Learning Factor:", &learningFactor);
     learningFactorSpnr->set_float_limits( 0.001, 1.0 );
+    ruleFitnessCheck = glui->add_checkbox_to_panel(paramPanel, "Assign fitness to rule", &calculateRuleFitness, updateTextBoxesId, updateCheck);
+    ruleEngPlayByLastMoveCheck = glui->add_checkbox_to_panel(paramPanel, "Rule Engine Play By Last Move", &ruleEngPlayByLastMove, updateTextBoxesId, updateCheck);
 
     parentSelectionSpnr = new GLUI_Spinner( paramPanel, "Parent Selection:", &parentSelection);
     parentSelectionSpnr->set_float_limits( 0.0, 1.0 );

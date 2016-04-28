@@ -95,7 +95,7 @@ char Player::nextMove() {
 	list<RuleEngine*> ruleEnginesWithMove;
 	for (iterator = ruleEngines.begin(); iterator != ruleEngines.end(); ++iterator) {
 		char ch = (*iterator)->nextMove();
-		if(ch != 0){
+		if(ch == 'R' || ch == 'P' || ch == 'S'){
 			ruleEnginesWithMove.push_back((*iterator));
 		}
 	}
@@ -110,8 +110,16 @@ char Player::nextMove() {
 	}
 
 	if(nextMove == 0){
-		nextMove = Utils::nextRandomMove();
+		if(moveHistory.size() > 0){
+			nextMove = moveHistory.back();
+		} else {
+			nextMove = Utils::nextRandomMove();
+		}
 	}
+	if(!(nextMove == 'R' || nextMove == 'P' || nextMove == 'S')){
+		cerr << "nextMove is wrong!" << nextMove << endl;
+	}
+
 	return nextMove;
 }
 

@@ -8,10 +8,12 @@
 #include <sstream>
 #include <cstdlib>
 #include <list>
+#include <algorithm>
 
 #include "Evolution.h"
 #include "Rule.h"
 #include "SelfAdaptiveRPS.h"
+#include "RuleParser.h"
 
 Evolution::Evolution() {
 	// TODO Auto-generated constructor stub
@@ -76,6 +78,10 @@ pair<RuleEngine*, RuleEngine*> Evolution::crossover(RuleEngine* engine1, RuleEng
 	return make_pair(child1, child2);
 }
 
+struct CompareRuleHowfit {
+    bool operator()(Rule * lhs, Rule * rhs) {return lhs->getFitness() > rhs->getFitness();}
+};
+
 void Evolution::mutate(RuleEngine* engine) {
 	Rule* ruleToInsert;
 	list<Rule*>* ruleList = engine->getRules();
@@ -100,8 +106,12 @@ void Evolution::mutate(RuleEngine* engine) {
 		(*iterator)->mutate();
 		break;
 	case 2://DELETE
+//		RuleParser::printRuleList(*ruleList);
+		ruleList->sort(CompareRuleHowfit());
+//		RuleParser::printRuleList(*ruleList);
 //		cout << "Deleting rule..." << endl;
-		ruleList->remove(*iterator);
+//		cout << ruleList->back()->getDetailString() << endl;
+		ruleList->remove(ruleList->back());
 		break;
 	}
 }

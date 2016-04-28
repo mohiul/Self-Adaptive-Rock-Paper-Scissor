@@ -83,15 +83,28 @@ void RuleEngine::addHistory(char opponentMove){
 
 float RuleEngine::calculateFitness() {
 	char result = resultHistory.back();
-	switch(result){
-	case 'W':
-		fitness = (1 - learningFactor)*fitness + learningFactor * 1;
+	switch(calculateRuleFitness){
+	case 0:
+		switch(result){
+		case 'W':
+			fitness = (1 - learningFactor)*fitness + learningFactor * 1;
+			break;
+		case 'D':
+			fitness = (1 - learningFactor)*fitness + learningFactor * 0;
+			break;
+		case 'L':
+			fitness = (1 - learningFactor)*fitness + learningFactor * (-1);
+			break;
+		}
 		break;
-	case 'D':
-		fitness = (1 - learningFactor)*fitness + learningFactor * 0;
-		break;
-	case 'L':
-		fitness = (1 - learningFactor)*fitness + learningFactor * (-1);
+	case 1:
+		parser->calculateFitness(result);
+		fitness = 0;
+		list<Rule*>::const_iterator iterator;
+		for (iterator = rules.begin(); iterator != rules.end(); ++iterator) {
+			Rule *rule = *iterator;
+			fitness += rule->getFitness();
+		}
 		break;
 	}
 	return fitness;
@@ -99,9 +112,10 @@ float RuleEngine::calculateFitness() {
 
 char RuleEngine::nextMove() {
 	char nextMove = parser->nextMove();
-//	cout << "RE " << id << " " << nextMove << endl;
-	if(nextMove > 0){
+	if(nextMove == 'R' || nextMove == 'P' || nextMove == 'S'){
 		moveHistory.push_back(nextMove);
+	} else if(nextMove != 0){
+		cerr << "nextMove is wrong!" << nextMove << endl;
 	}
 	return nextMove;
 }

@@ -58,5 +58,6 @@ extern float mutationRate;
 extern int updateTextBoxesCheck;
 extern int applyAdaptCheckValue;
 extern int initParentFitCheckVal;
-
+extern int calculateRuleFitness;
+extern int ruleEngPlayByLastMove;
 #endif /* SELFADAPTIVERPS_H_ */

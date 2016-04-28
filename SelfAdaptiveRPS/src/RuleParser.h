@@ -19,13 +19,15 @@ class RuleEngine;
 class RuleParser {
 protected:
 	RuleEngine *ruleEngine;
+	Rule* lastMatchingRule;
 	list<Rule*> matchRules(list<char> history);
 public:
 	RuleParser(RuleEngine *player);
 	virtual ~RuleParser();
 	char nextMove();
 	char nextRandomMove();
-	void printRuleList(list<Rule*> ruleList);
+	static void printRuleList(list<Rule*> ruleList);
+	void calculateFitness(char result);
 };
 
 #endif /* RULEPARSER_H_ */

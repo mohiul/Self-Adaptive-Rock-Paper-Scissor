@@ -27,6 +27,7 @@ protected:
 	char action;
 	int specifcity;
 	int howRecent;
+	float fitness;
 public:
 	Rule(string condition, char action);
 	virtual ~Rule();
@@ -40,6 +41,8 @@ public:
 	RuleComparison compare(Rule *rule);
 	static Rule* generateRule();
 	Rule* mutate();
+	float calculateFitness(char result);
+	float getFitness();
 protected:
 };
 

@@ -131,34 +131,39 @@ char RuleParser::nextMove() {
 			}
 		}
 	}
-	if(matchedRules.size() == 0){
+	lastMatchingRule = NULL;
+	if(matchedRules.size() == 0 && ruleEngPlayByLastMove){
 		if(ruleEngine->moveHistory.size() > 0){
-//			moveToReturn = nextRandomMove();
-//		} else {
-//			moveToReturn = ruleEngine->player->moveHistory.back();
 			moveToReturn = ruleEngine->moveHistory.back();
-//			cout << "RE " << ruleEngine->id << " moveToReturn:" << moveToReturn << endl;
 		}
-	} else {
-//		player->printRuleList(matchedRules);
+	} else if(matchedRules.size() > 0){
+//		printRuleList(matchedRules);
 		matchedRules.sort(CompareRuleHowRecent());
-//		player->printRuleList(matchedRules);
+//		printRuleList(matchedRules);
 		matchedRules.sort(CompareRuleSpecificity());
-//		player->printRuleList(matchedRules);
-		Rule *rule = matchedRules.front();
-//		cout << "Using Rule : " << rule->getDetailString() << endl;
-		moveToReturn = rule->getAction();
+//		printRuleList(matchedRules);
+		lastMatchingRule = matchedRules.front();
+//		cout << "Using Rule : " << lastMatchingRule->getDetailString() << endl;
+		moveToReturn = lastMatchingRule->getAction();
 	}
 	return moveToReturn;
 }
 
 void RuleParser::printRuleList(list<Rule*> ruleList){
 	list<Rule*>::const_iterator iterator;
-	cout << ruleEngine->player->getName() << " rule list begin: " << endl;
+//	cout << ruleEngine->player->getName() << " rule list begin: " << endl;
+	cout << " rule list begin: " << endl;
 	for (iterator = ruleList.begin(); iterator != ruleList.end(); ++iterator) {
 		cout << (*iterator)->getDetailString() << endl;
 	}
-	cout << ruleEngine->player->getName() << " rule list end: " << endl;
+	cout << " rule list end: " << endl;
+//	cout << ruleEngine->player->getName() << " rule list end: " << endl;
+}
+
+void RuleParser::calculateFitness(char result){
+	if(lastMatchingRule != NULL){
+		lastMatchingRule->calculateFitness(result);
+	}
 }
 
 //int main(){
